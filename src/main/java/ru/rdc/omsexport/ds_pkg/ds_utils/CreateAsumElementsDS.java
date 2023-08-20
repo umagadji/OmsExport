@@ -21,7 +21,7 @@ public class CreateAsumElementsDS {
             slKoefDS.setName_sl(row.getKslp_text());
             slKoefDS.setCost12("0");
 
-            usl.setSlKoef(slKoefDS);
+            usl.setSlKoefDS(slKoefDS);
         }
     }
 
@@ -37,7 +37,7 @@ public class CreateAsumElementsDS {
             hrrgd.setPrice("0.00");
             hrrgd.setIdvidvme("");
 
-            usl.setHrrgd(hrrgd);
+            usl.setHrrgdDS(hrrgd);
         }
     }
 
@@ -50,7 +50,7 @@ public class CreateAsumElementsDS {
             crit.setCrit(row.getCrit_code());
             crit.setCname(row.getCrit_text());
 
-            usl.setCrit(crit);
+            usl.setCritDS(crit);
         }
     }
 
@@ -232,8 +232,8 @@ public class CreateAsumElementsDS {
 
         LocalDate dateout = LocalDate.parse(row.getDat_out(), formatter);
 
-        sluch.setOtmonth(dateout.getMonthValue() + "");
-        sluch.setOtyear(dateout.getYear() + "");
+        sluch.setOtmonth(String.valueOf(dateout.getMonthValue()));
+        sluch.setOtyear(String.valueOf(dateout.getYear()));
 
         sluch.setDisp("");
         sluch.setVid_hmp("");
@@ -280,7 +280,7 @@ public class CreateAsumElementsDS {
 
         //Устанавливаем пациента для случая
         PacientDS pacientDS = createPatient(row);
-        sluch.setPacient(pacientDS);
+        sluch.setPacientDS(pacientDS);
 
 
         return sluch;

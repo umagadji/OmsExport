@@ -1,13 +1,14 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.2'
     id 'io.spring.dependency-management' version '1.1.2'
-    //id 'org.openjfx.javafxplugin' version '0.0.14'
     id 'application'
 }
 
 group = 'ru.rdc'
-version = '0.0.1-SNAPSHOT'
+version = '1.1'
 
 java {
     sourceCompatibility = '17'
@@ -52,7 +53,8 @@ dependencies {
 
 //Определяем платформу, т.е. ОС
 private static String getJavaFXPlatform() {
-    def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+    //def currentOS = org.gradle.nativeplatform.platform.internal.DefaultNativePlatform.currentOperatingSystem;
+    def currentOS = DefaultNativePlatform.currentOperatingSystem;
     if (currentOS.isWindows()) {
         return 'win'
     } else if (currentOS.isLinux()) {

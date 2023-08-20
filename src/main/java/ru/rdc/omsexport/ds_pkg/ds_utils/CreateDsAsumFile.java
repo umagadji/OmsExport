@@ -34,10 +34,9 @@ public class CreateDsAsumFile {
     private MainController mainController;
 
     private static String yearMonth = ""; //Хранит год и месяц для названия файла
-    private SimpleDateFormat formatterMain = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private String infoMSG = "ИНФОРМАЦИЯ: ";
-    private String errorMSG = "ОШИБКА: СЛУЧАЙ НЕ БУДЕТ ДОБАВЛЕН ПО ПРИЧИНЕ: ";
-    private int sluchCounter = 0; //Счетчик случаев
+    private final SimpleDateFormat formatterMain = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private final String infoMSG = "ИНФОРМАЦИЯ: ";
+    private final String errorMSG = "ОШИБКА: СЛУЧАЙ НЕ БУДЕТ ДОБАВЛЕН ПО ПРИЧИНЕ: ";
     private int allUslCounter = 0; //Счетчик всех услуг во входном файле стационара
 
     private Map<String, VrachiDS> vrachiDSMap = new HashMap<>();
@@ -55,12 +54,7 @@ public class CreateDsAsumFile {
     //Метод для вывода логов в TextArea в main.fxml
     private void setLogs(String message) {
         //Изменение любых данных в интерфейсе JavaFX нужно делать в отдельном потоке
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                mainController.getLogs().appendText(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now()) + " " + message + "\n");
-            }
-        });
+        Platform.runLater(() -> mainController.getLogs().appendText(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now()) + " " + message + "\n"));
     }
 
     //Метод для вывода логов в консоль
@@ -69,9 +63,7 @@ public class CreateDsAsumFile {
     }
 
     private void setCounterDS(int all, int checked) {
-        Platform.runLater(()-> {
-            mainController.getCounterDs().setText("ДС: " + all + " / Случаев: " + checked);
-        });
+        Platform.runLater(()-> mainController.getCounterDs().setText("ДС: " + all + " / Случаев: " + checked));
     }
 
     //Метод проверяет все записи Rows на корректность и возвращает список корректных записей
@@ -147,11 +139,9 @@ public class CreateDsAsumFile {
                 CreateAsumElementsDS.createHrrgd(rowDS, usl);
 
                 //Добавляем услугу к случаю
-                sluchDS.setUsl(usl);
+                sluchDS.setUslDS(usl);
 
                 sluchDSList.add(sluchDS);
-
-                sluchCounter++;
 
                 //Выводим в логи информацию о добавленном случае пациента
                 setLogs(infoMSG + "Добавлен случай для пациента "

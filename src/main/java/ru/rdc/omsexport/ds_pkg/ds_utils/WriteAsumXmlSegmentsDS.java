@@ -19,13 +19,13 @@ public class WriteAsumXmlSegmentsDS {
     public static void writeZap(XMLStreamWriter writer, ZapDS zap) throws XMLStreamException {
         writer.writeStartElement("zap");
 
-        getElement(writer, "id", zap.getSluchList().get(0).getPacient().getNpolis());
+        getElement(writer, "id", zap.getSluchList().get(0).getPacientDS().getNpolis());
         getElement(writer, "idlist", "1");
         getElement(writer, "pr_nov", "0");
 
         //тут возможно нужно подумать о том как сделать сортировку,
         // чтобы в asum файл записались данные о том иногородний пациент или нет на основе первого элемента из sluchList
-        writePatient(writer, zap.getSluchList().get(0).getPacient());
+        writePatient(writer, zap.getSluchList().get(0).getPacientDS());
 
         //Проходимся по случаям и создаем их
         for (SluchDS sluch : zap.getSluchList()) {
@@ -79,7 +79,7 @@ public class WriteAsumXmlSegmentsDS {
         getElement(writer, "smo_ok", pacient.getSmo_ok());
         getElement(writer, "smo_nam", pacient.getSmo_nam());
         getElement(writer, "novor", pacient.getNovor());
-        getElement(writer, "inogor", pacient.isInogor());
+        getElement(writer, "inogor", pacient.getInogor());
         getElement(writer, "fam", pacient.getFam().toUpperCase());
         getElement(writer, "im", pacient.getIm().toUpperCase());
         getElement(writer, "ot", pacient.getOt().toUpperCase());
@@ -203,8 +203,8 @@ public class WriteAsumXmlSegmentsDS {
         getElement(writer,"npr_usl_ok", sluch.getNpr_usl_ok());
         getElement(writer,"wei", sluch.getWei());
 
-        if (sluch.getUsl() != null) {
-            writeUsl(writer, sluch.getUsl());
+        if (sluch.getUslDS() != null) {
+            writeUsl(writer, sluch.getUslDS());
         }
 
         writer.writeEndElement();
@@ -259,16 +259,16 @@ public class WriteAsumXmlSegmentsDS {
         getElement(writer,"muvr_lpu",usl.getMuvr_lpu());
         getElement(writer,"date_usl",usl.getDate_usl());
 
-        if (usl.getSlKoef() != null) {
-            writeSlKoef(writer, usl.getSlKoef());
+        if (usl.getSlKoefDS() != null) {
+            writeSlKoef(writer, usl.getSlKoefDS());
         }
 
-        if (usl.getCrit() != null) {
-            writeCrit(writer, usl.getCrit());
+        if (usl.getCritDS() != null) {
+            writeCrit(writer, usl.getCritDS());
         }
 
-        if (usl.getHrrgd() != null) {
-            writeHrrgd(writer, usl.getHrrgd());
+        if (usl.getHrrgdDS() != null) {
+            writeHrrgd(writer, usl.getHrrgdDS());
         }
 
         writer.writeEndElement();
