@@ -40,12 +40,14 @@ public class SpTarifExtended {
     @Column
     private int max_krat; //максимальная кратность услуги
     @Column
+    private int usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
+    @Column
     private boolean muvr;
 
     public SpTarifExtended() {
     }
 
-    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, boolean ex_7_2, String prname, int kr_mul, int max_krat, boolean muvr) {
+    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, boolean ex_7_2, String prname, int kr_mul, int max_krat, int usl_idsp, boolean muvr) {
         this.name_issl = name_issl;
         this.ksg = ksg;
         this.price = price;
@@ -57,6 +59,7 @@ public class SpTarifExtended {
         this.prname = prname;
         this.kr_mul = kr_mul;
         this.max_krat = max_krat;
+        this.usl_idsp = usl_idsp;
         this.muvr = muvr;
     }
 
@@ -156,6 +159,14 @@ public class SpTarifExtended {
         this.max_krat = max_krat;
     }
 
+    public int getUsl_idsp() {
+        return usl_idsp;
+    }
+
+    public void setUsl_idsp(int usl_idsp) {
+        this.usl_idsp = usl_idsp;
+    }
+
     public boolean isMuvr() {
         return muvr;
     }
@@ -179,6 +190,7 @@ public class SpTarifExtended {
                 ", prname='" + prname + '\'' +
                 ", kr_mul='" + kr_mul + '\'' +
                 ", max_krat='" + max_krat + '\'' +
+                ", usl_idsp='" + usl_idsp + '\'' +
                 ", muvr='" + muvr + '\'' +
                 '}';
     }
