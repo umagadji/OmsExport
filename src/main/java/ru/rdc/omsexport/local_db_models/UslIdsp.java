@@ -27,5 +27,5 @@ public class UslIdsp {
     @Column
     private String idsp_name;
     @Column
-    private Integer idsp;
+    private int idsp;
 }

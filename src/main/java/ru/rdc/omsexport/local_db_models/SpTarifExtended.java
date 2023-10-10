@@ -39,13 +39,13 @@ public class SpTarifExtended {
     private int max_krat; //максимальная кратность услуги
     @Column
     private boolean muvr;
-    @Column //Указан тип Integer, т.к. у некоторых услуг могут не быть idsp, чтобы при попытке сохранить не пыталось в int записать null
-    private Integer usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
+    @Column
+    private int usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
 
     public SpTarifExtended() {
     }
 
-    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, String prname, int kr_mul, int max_krat, boolean muvr, Integer usl_idsp) {
+    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, String prname, int kr_mul, int max_krat, boolean muvr, int usl_idsp) {
         this.name_issl = name_issl;
         this.ksg = ksg;
         this.price = price;
@@ -148,11 +148,11 @@ public class SpTarifExtended {
         this.max_krat = max_krat;
     }
 
-    public Integer getUsl_idsp() {
+    public int getUsl_idsp() {
         return usl_idsp;
     }
 
-    public void setUsl_idsp(Integer usl_idsp) {
+    public void setUsl_idsp(int usl_idsp) {
         this.usl_idsp = usl_idsp;
     }
 
