@@ -32,22 +32,20 @@ public class SpTarifExtended {
     @Column
     private int t_type;
     @Column
-    private boolean ex_7_2;
-    @Column
     private String prname;
     @Column
     private int kr_mul; //0, если нельзя несколько раз подавать услугу на оплату, 1 - если можно
     @Column
     private int max_krat; //максимальная кратность услуги
     @Column
-    private int usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
-    @Column
     private boolean muvr;
+    @Column //Указан тип Integer, т.к. у некоторых услуг могут не быть idsp, чтобы при попытке сохранить не пыталось в int записать null
+    private Integer usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
 
     public SpTarifExtended() {
     }
 
-    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, boolean ex_7_2, String prname, int kr_mul, int max_krat, int usl_idsp, boolean muvr) {
+    public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, String prname, int kr_mul, int max_krat, boolean muvr, Integer usl_idsp) {
         this.name_issl = name_issl;
         this.ksg = ksg;
         this.price = price;
@@ -55,12 +53,11 @@ public class SpTarifExtended {
         this.idpr = idpr;
         this.kol_usl = kol_usl;
         this.t_type = t_type;
-        this.ex_7_2 = ex_7_2;
         this.prname = prname;
         this.kr_mul = kr_mul;
         this.max_krat = max_krat;
-        this.usl_idsp = usl_idsp;
         this.muvr = muvr;
+        this.usl_idsp = usl_idsp;
     }
 
     public int getId() {
@@ -127,14 +124,6 @@ public class SpTarifExtended {
         this.t_type = t_type;
     }
 
-    public boolean isEx_7_2() {
-        return ex_7_2;
-    }
-
-    public void setEx_7_2(boolean ex_7_2) {
-        this.ex_7_2 = ex_7_2;
-    }
-
     public String getPrname() {
         return prname;
     }
@@ -159,11 +148,11 @@ public class SpTarifExtended {
         this.max_krat = max_krat;
     }
 
-    public int getUsl_idsp() {
+    public Integer getUsl_idsp() {
         return usl_idsp;
     }
 
-    public void setUsl_idsp(int usl_idsp) {
+    public void setUsl_idsp(Integer usl_idsp) {
         this.usl_idsp = usl_idsp;
     }
 
@@ -186,12 +175,11 @@ public class SpTarifExtended {
                 ", idpr=" + idpr +
                 ", kol_usl=" + kol_usl +
                 ", t_type=" + t_type +
-                ", ex_7_2=" + ex_7_2 +
                 ", prname='" + prname + '\'' +
                 ", kr_mul='" + kr_mul + '\'' +
                 ", max_krat='" + max_krat + '\'' +
-                ", usl_idsp='" + usl_idsp + '\'' +
                 ", muvr='" + muvr + '\'' +
+                ", usl_idsp='" + usl_idsp + '\'' +
                 '}';
     }
 }

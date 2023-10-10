@@ -22,10 +22,8 @@ public class WriteLocalDBTablesInDatabase {
     private final MedspecService medspecService;
     private final MkbService mkbService;
     private final ProfotService profotService;
-    private final SpTarifAddService spTarifAddService;
     private final UslKratnostMultiService uslKratnostMultiService;
     private final UslIdspService uslIdspService;
-    private final SerwitelistService serwitelistService;
     private final SpTarifExtendedService spTarifExtendedService;
     private final MkbExtendedService mkbExtendedService;
     private final CardsService cardsService;
@@ -41,10 +39,8 @@ public class WriteLocalDBTablesInDatabase {
             MedspecService medspecService,
             MkbService mkbService,
             ProfotService profotService,
-            SpTarifAddService spTarifAddService,
             UslKratnostMultiService uslKratnostMultiService,
             UslIdspService uslIdspService,
-            SerwitelistService serwitelistService,
             SpTarifExtendedService spTarifExtendedService,
             MkbExtendedService mkbExtendedService,
             CardsService cardsService) {
@@ -55,10 +51,8 @@ public class WriteLocalDBTablesInDatabase {
         this.medspecService = medspecService;
         this.mkbService = mkbService;
         this.profotService = profotService;
-        this.spTarifAddService = spTarifAddService;
         this.uslKratnostMultiService = uslKratnostMultiService;
         this.uslIdspService = uslIdspService;
-        this.serwitelistService = serwitelistService;
         this.spTarifExtendedService = spTarifExtendedService;
         this.mkbExtendedService = mkbExtendedService;
         this.cardsService = cardsService;
@@ -91,10 +85,8 @@ public class WriteLocalDBTablesInDatabase {
         mkbExtendedService.deleteAll();
         onklcodService.deleteAll();
         profotService.deleteAll();
-        serwitelistService.deleteAll();
         slpuService.deleteAll();
         smoService.deleteAll();
-        spTarifAddService.deleteAll();
         spTarifService.deleteAll();
         spTarifExtendedService.deleteAll();
         uslKratnostMultiService.deleteAll();
@@ -109,10 +101,8 @@ public class WriteLocalDBTablesInDatabase {
         mkbExtendedService.deleteAll();
         onklcodService.deleteAll();
         profotService.deleteAll();
-        serwitelistService.deleteAll();
         slpuService.deleteAll();
         smoService.deleteAll();
-        spTarifAddService.deleteAll();
         spTarifService.deleteAll();
         spTarifExtendedService.deleteAll();
         uslKratnostMultiService.deleteAll();
@@ -145,17 +135,11 @@ public class WriteLocalDBTablesInDatabase {
         List<SpTarif> spTarifList = SpTarifDBFReader.readDbf(AppConstants.localDBFPath + "sp_tarif.dbf", "Cp1251");
         spTarifService.saveAll(spTarifList);
 
-        List<SpTarifAdd> spTarifAddList = SpTarifAddDBFReader.readDbf(AppConstants.localDBFPath + "sp_tarif_add.dbf", "Cp1251");
-        spTarifAddService.saveAll(spTarifAddList);
-
-        List<UslKratnostMulti> uslKratnostMultiList = UslKratnostMultiDBFReader.readDbf(AppConstants.localDBFPath + "usl_kr_multi.dbf", "Cp1251");
-        uslKratnostMultiService.saveAll(uslKratnostMultiList);
-
         List<UslIdsp> uslIdspList = UslIdspDBFReader.readDbf(AppConstants.localDBFPath + "usl_idsp.dbf", "Cp1251");
         uslIdspService.saveAll(uslIdspList);
 
-        List<Serwitelist> serwitelistList = SerwiteListDBFReader.readDbf(AppConstants.localDBFPath + "serwitelist.dbf", "Cp1251");
-        serwitelistService.saveAll(serwitelistList);
+        List<UslKratnostMulti> uslKratnostMultiList = UslKratnostMultiDBFReader.readDbf(AppConstants.localDBFPath + "usl_kr_multi.dbf", "Cp1251");
+        uslKratnostMultiService.saveAll(uslKratnostMultiList);
 
         //Сохраняет все объединенные записи в новую таблицу sp_tarif_extended
         spTarifExtendedService.saveSpTarifExtendedList();
