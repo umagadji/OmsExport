@@ -409,7 +409,7 @@ public class CreateAsumElements {
         Optional<MkbExtended> mkbExtendedOptional = mkbExtendedService.findByLcod(sluch.getDs1());
 
         //Если optional вернул МКБ код и если он онкологический, то создаем нужные сегменты
-        if (mkbExtendedOptional.isPresent() && mkbExtendedOptional.get().isIs_onk()) {
+        if (mkbExtendedOptional.isPresent() && mkbExtendedOptional.get().is_onk()) {
             sluch.setCons(createCons(sluch));
             sluch.setNapr(createNapr(sluch));
             sluch.setOnkSl(createOnkSl(sluch));

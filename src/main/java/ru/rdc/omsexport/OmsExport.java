@@ -7,7 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
-public class FomsRaschetRDC extends Application {
+public class OmsExport extends Application {
     ConfigurableApplicationContext applicationContext;
 
     @Override

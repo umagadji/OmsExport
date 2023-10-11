@@ -1,6 +1,10 @@
 package ru.rdc.omsexport.local_db_models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 //Этот класс описывает таблицу в БД, которая будет сормирована будем запроса ниже
 /*
@@ -13,6 +17,10 @@ LEFT JOIN usl_kr_multi ON ALLTRIM(sp_tarif.ksg) = ALLTRIM(usl_kr_multi.ksg)
 //Расширенная версия SpTarif с полями из sp_tarif, sp_tarif_add, profot, usl_kr_multi
 @Entity
 @Table(name = "sp_tarif_extended")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class SpTarifExtended {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,9 +50,6 @@ public class SpTarifExtended {
     @Column
     private int usl_idsp; //Способ оплаты согласно обновлениям ТФОМС от 09.2023, используя таблицу usl_idsp из локальной БД
 
-    public SpTarifExtended() {
-    }
-
     public SpTarifExtended(String name_issl, String ksg, double price, int type, int idpr, double kol_usl, int t_type, String prname, int kr_mul, int max_krat, boolean muvr, int usl_idsp) {
         this.name_issl = name_issl;
         this.ksg = ksg;
@@ -58,110 +63,6 @@ public class SpTarifExtended {
         this.max_krat = max_krat;
         this.muvr = muvr;
         this.usl_idsp = usl_idsp;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName_issl() {
-        return name_issl;
-    }
-
-    public void setName_issl(String name_issl) {
-        this.name_issl = name_issl;
-    }
-
-    public String getKsg() {
-        return ksg;
-    }
-
-    public void setKsg(String ksg) {
-        this.ksg = ksg;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getIdpr() {
-        return idpr;
-    }
-
-    public void setIdpr(int idpr) {
-        this.idpr = idpr;
-    }
-
-    public double getKol_usl() {
-        return kol_usl;
-    }
-
-    public void setKol_usl(double kol_usl) {
-        this.kol_usl = kol_usl;
-    }
-
-    public int getT_type() {
-        return t_type;
-    }
-
-    public void setT_type(int t_type) {
-        this.t_type = t_type;
-    }
-
-    public String getPrname() {
-        return prname;
-    }
-
-    public void setPrname(String prname) {
-        this.prname = prname;
-    }
-
-    public int getKr_mul() {
-        return kr_mul;
-    }
-
-    public void setKr_mul(int kr_mul) {
-        this.kr_mul = kr_mul;
-    }
-
-    public int getMax_krat() {
-        return max_krat;
-    }
-
-    public void setMax_krat(int max_krat) {
-        this.max_krat = max_krat;
-    }
-
-    public int getUsl_idsp() {
-        return usl_idsp;
-    }
-
-    public void setUsl_idsp(int usl_idsp) {
-        this.usl_idsp = usl_idsp;
-    }
-
-    public boolean isMuvr() {
-        return muvr;
-    }
-
-    public void setMuvr(boolean muvr) {
-        this.muvr = muvr;
     }
 
     @Override

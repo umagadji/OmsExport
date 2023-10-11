@@ -17,7 +17,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 @Component
-public class StageInitializer implements ApplicationListener<FomsRaschetRDC.StageReadyEvent> {
+public class StageInitializer implements ApplicationListener<OmsExport.StageReadyEvent> {
 
     @Value("classpath:/fxml/main.fxml")
     private Resource resource;
@@ -25,7 +25,7 @@ public class StageInitializer implements ApplicationListener<FomsRaschetRDC.Stag
     private final ApplicationContext applicationContext;
 
     public StageInitializer(
-            @Value("Программа для расчета экономико-статистических показателей ГБУ РД \"РДЦ\"") String applicationTitle,
+            @Value("Программа для расчета экономико-статистических показателей") String applicationTitle,
             ApplicationContext applicationContext) {
         this.applicationTitle = applicationTitle;
         this.applicationContext = applicationContext;
@@ -34,7 +34,7 @@ public class StageInitializer implements ApplicationListener<FomsRaschetRDC.Stag
     }
 
     @Override
-    public void onApplicationEvent(FomsRaschetRDC.StageReadyEvent event) {
+    public void onApplicationEvent(OmsExport.StageReadyEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(resource.getURL());
             loader.setControllerFactory(aClass -> applicationContext.getBean(aClass));

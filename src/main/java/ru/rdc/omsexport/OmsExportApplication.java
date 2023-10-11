@@ -8,7 +8,7 @@ public class OmsExportApplication {
 
     //Начало выполнения программы
     public static void main(String[] args) {
-        Application.launch(FomsRaschetRDC.class, args);
+        Application.launch(OmsExport.class, args);
     }
 
 }

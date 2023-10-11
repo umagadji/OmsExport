@@ -1,10 +1,18 @@
 package ru.rdc.omsexport.local_db_models;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 //Класс описывает сущность таблицы для чтения из DBF и записи в БД Postgres
 @Entity
 @Table(name = "s_lpu")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Slpu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,65 +30,6 @@ public class Slpu {
     private int idump;
     @Column
     private String name;
-
-    public Slpu() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getMcod() {
-        return mcod;
-    }
-
-    public void setMcod(String mcod) {
-        this.mcod = mcod;
-    }
-
-    public String getGlpu() {
-        return glpu;
-    }
-
-    public void setGlpu(String glpu) {
-        this.glpu = glpu;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public int getIdsp() {
-        return idsp;
-    }
-
-    public void setIdsp(int idsp) {
-        this.idsp = idsp;
-    }
-
-    public int getIdump() {
-        return idump;
-    }
-
-    public void setIdump(int idump) {
-        this.idump = idump;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     @Override
     public String toString() {

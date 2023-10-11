@@ -387,7 +387,7 @@ public class CreateDiagnAsumFile {
                                     + " Код МКБ mkb_code_p не найден в mkb.dbf = " + card.getMkb_code_p());
                         } else {
                             //Добавляем в cards_diagn информацию о is_onkl из mkb_extended
-                            card.set_onkl(mkbExtendedOptionalMkbCodeP.get().isIs_onk());
+                            card.set_onkl(mkbExtendedOptionalMkbCodeP.get().is_onk());
                             //Если есть нормальный первичный код, то его делаем также основным
                             card.setMkb_code(mkbExtendedOptionalMkbCodeP.get().getLcod());
                         }
@@ -402,7 +402,7 @@ public class CreateDiagnAsumFile {
                                     + " Код МКБ mkb_code не найден в mkb.dbf = " + card.getMkb_code());
                         } else {
                             //Добавляем в cards_diagn информацию о is_onkl из mkb_extended
-                            card.set_onkl(mkbExtendedOptionalForMkbCode.get().isIs_onk());
+                            card.set_onkl(mkbExtendedOptionalForMkbCode.get().is_onk());
                         }
                     }
                 }

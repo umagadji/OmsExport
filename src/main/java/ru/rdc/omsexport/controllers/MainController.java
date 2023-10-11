@@ -247,7 +247,7 @@ public class MainController implements Initializable {
     public void onAbout(ActionEvent actionEvent) {
         AlertDialogUtils.showInfoAlert("О программе"
                 , null
-                , "Программа для расчета экономико-статистических показателей ГБУ РД \"РДЦ\""
+                , "Программа для расчета экономико-статистических показателей"
                         + "\nВерсия: " + AppInfo.getVersion());
     }
 
