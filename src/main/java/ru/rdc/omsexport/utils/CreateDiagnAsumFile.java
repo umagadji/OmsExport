@@ -31,6 +31,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 public class CreateDiagnAsumFile {
     Map<String, Vrachi> vrachiMap = new HashMap<>(); //Будет хранить всех уникальных врачей
     private static String yearMonth = ""; //Хранит год и месяц для названия файла
+    private boolean isChkPredUslDate = false; //Проверка установлен ли чекбокс chkPredUslDate
     private MainController mainController;
     private final SmoService smoService;
     private final SpTarifExtendedService spTarifExtendedService;
@@ -57,6 +58,14 @@ public class CreateDiagnAsumFile {
 
     public void setMainController(MainController mainController) {
         this.mainController = mainController;
+    }
+
+    public void setChkPredUslDate(boolean chkPredUslDate) {
+        isChkPredUslDate = chkPredUslDate;
+    }
+
+    public boolean isChkPredUslDate() {
+        return isChkPredUslDate;
     }
 
     //Метод для вывода логов в TextArea в main.fxml
@@ -559,6 +568,18 @@ public class CreateDiagnAsumFile {
                 }
             }
             //ДОБАВЛЕНИЕ ПРИЗНАКА МУР. КОНЕЦ
+
+            //Если услуга корректная
+            if (card.isCorrect()) {
+                //Если установлена галочка chkPredUslDate. Нужна только для предварительных файлов
+                if (isChkPredUslDate()) {
+                    if (card.getDate_in().isAfter(LocalDate.now())) {
+                        setLogsInConsole("Услуга " + card.getCode_usl() + " была выполнена позднее чем текущая дата, для нее были изменены даты выполнения: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp() + ", DATE_IN " + card.getDate_in());
+                        card.setDate_in(LocalDate.now());
+                        card.setDate_out(LocalDate.now());
+                    }
+                }
+            }
 
             //ДОБАВЛЕНИЕ СВОЙСТВ ДЛЯ CARDS. МОЖНО ДОБАВЛЯТЬ ЛЮБЫЕ СВОЙСТВА, ЧТОБЫ НАПРИМЕР ДАЛЕЕ ДЕЛАТЬ РАЗБИВКУ ПО НИМ
             if (spTarifNewOptional.isPresent()) {

@@ -41,6 +41,10 @@ public class MainController implements Initializable {
     @FXML
     private Label counterRdc, counterRec, counterKp, counterDs, txtDsFileInfo, sluchCounterRDC, sluchCounterREC, sluchCounterKP;
 
+    //Чекбокс для того, чтобы выставить даты услуг, выполненных позднее текущей привести к текущей дате. Добавил 22.10.2023 чтобы не получать новый ФЛК для предварительных файлов. Будет использоваться только для диагностики
+    @FXML
+    private CheckBox chkPredUslDate; // Значение поля не должно быть больше DSCHET, для сегмента DATE_Z_2 - Дата окончания лечения
+
     private Stage mainStage;
 
     //Файл по стационару
@@ -129,6 +133,10 @@ public class MainController implements Initializable {
     public void onStart(ActionEvent actionEvent) {
         logs.setText(null);
         List<String> otdList = getOtdList();
+
+        if (chkPredUslDate.isSelected()) {
+            createDiagnAsumFile.setChkPredUslDate(true);
+        }
 
         if (otdList.size() != 0) {
 
