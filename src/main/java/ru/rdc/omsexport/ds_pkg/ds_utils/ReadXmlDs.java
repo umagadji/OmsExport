@@ -5,6 +5,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import ru.rdc.omsexport.ds_pkg.ds_models.RowDS;
+import ru.rdc.omsexport.utils.AlertDialogUtils;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -37,6 +38,7 @@ public class ReadXmlDs {
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 rowDSList.add(getRow(nodeList.item(i)));
+                System.out.println(i + " строка считана");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -130,6 +132,28 @@ public class ReadXmlDs {
     }
 
     private static String getTagValue(String tag, Element element) {
+        String rez = "";
+
+        //Получаем узел SNPOL, чтобы в случае ошибки чтения и выпадения NullPointerException вывести инфо для какого полиса ошибка
+        NodeList snpolNodeList = element.getElementsByTagName("SNPOL").item(0).getChildNodes();
+        Node snpolNode = (Node) snpolNodeList.item(0);
+
+        try {
+            NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
+            Node node = (Node) nodeList.item(0);
+
+            if (node.getNodeValue().equals("'") || node.getNodeValue().equals("")) {
+                return rez;
+            } else {
+                rez = node.getNodeValue();
+                return rez;
+            }
+        } catch (NullPointerException ex) {
+            AlertDialogUtils.showErrorAlert("Ошибка", null, "Ошибка чтения данных по стационару для полиса " + snpolNode.getNodeValue());
+        }
+        return rez;
+
+        /*стары вариант до 25.10.2023
         NodeList nodeList = element.getElementsByTagName(tag).item(0).getChildNodes();
         Node node = (Node) nodeList.item(0);
 
@@ -137,6 +161,6 @@ public class ReadXmlDs {
             return "";
         } else {
             return node.getNodeValue();
-        }
+        }*/
     }
 }

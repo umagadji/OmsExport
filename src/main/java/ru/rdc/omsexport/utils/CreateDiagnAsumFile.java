@@ -575,6 +575,7 @@ public class CreateDiagnAsumFile {
                 if (isChkPredUslDate()) {
                     if (card.getDate_in().isAfter(LocalDate.now())) {
                         setLogsInConsole("Услуга " + card.getCode_usl() + " была выполнена позднее чем текущая дата, для нее были изменены даты выполнения: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp() + ", DATE_IN " + card.getDate_in());
+                        setLogs("Услуга " + card.getCode_usl() + " была выполнена позднее чем текущая дата, для нее были изменены даты выполнения: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp() + ", DATE_IN " + card.getDate_in());
                         card.setDate_in(LocalDate.now());
                         card.setDate_out(LocalDate.now());
                     }

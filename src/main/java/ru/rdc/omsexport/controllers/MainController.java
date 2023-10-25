@@ -136,6 +136,8 @@ public class MainController implements Initializable {
 
         if (chkPredUslDate.isSelected()) {
             createDiagnAsumFile.setChkPredUslDate(true);
+        } else {
+            createDiagnAsumFile.setChkPredUslDate(false);
         }
 
         if (otdList.size() != 0) {
