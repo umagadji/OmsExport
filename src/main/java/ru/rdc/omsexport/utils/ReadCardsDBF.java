@@ -124,6 +124,14 @@ public class ReadCardsDBF {
                     card.setDocnum(rowList.get(k).get("DOCNUM"));
                 }
 
+                if (!rowList.get(k).get("DOCDATE").trim().equals("null")) {
+                    card.setDocdate(LocalDate.parse(rowList.get(k).get("DOCDATE"), formatter));
+                }
+
+                if (!rowList.get(k).get("DOCORG").equals("null")) {
+                    card.setDocorg(rowList.get(k).get("DOCORG"));
+                }
+
                 if (!rowList.get(k).get("SNILS").equals("null")) {
                     card.setSnils(rowList.get(k).get("SNILS"));
                 }

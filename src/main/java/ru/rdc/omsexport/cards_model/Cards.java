@@ -63,6 +63,10 @@ public class Cards implements Comparable<Cards> {
     @Column
     private String docnum;
     @Column
+    private LocalDate docdate;
+    @Column
+    private String docorg;
+    @Column
     private String snils;
     @Column
     private String adres;

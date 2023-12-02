@@ -319,7 +319,7 @@ public class CreateAsumElementsDS {
         pacient.setW_p("");
         pacient.setDr_p(row.getDat_rojd_n());
         pacient.setMr(row.getMr());
-        pacient.setDoctype("");
+        pacient.setDoctype(row.getDoctype());
         pacient.setDocser(row.getDocser());
         pacient.setDocnum(row.getDocnum());
         pacient.setSnils(row.getSnils());
@@ -330,8 +330,8 @@ public class CreateAsumElementsDS {
         pacient.setRecid(UUID.randomUUID().toString().toUpperCase());
         pacient.setInv("0");
         pacient.setMse("0");
-        pacient.setDocdate("");
-        pacient.setDocorg("");
+        pacient.setDocdate(row.getDocdate());
+        pacient.setDocorg(row.getDocorg());
 
         return pacient;
     }

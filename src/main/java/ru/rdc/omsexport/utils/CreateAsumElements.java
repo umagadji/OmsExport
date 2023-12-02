@@ -515,6 +515,13 @@ public class CreateAsumElements {
         pacient.setDoctype(cards.getDoctype() + "");
         pacient.setDocser(cards.getDocser());
         pacient.setDocnum(cards.getDocnum());
+
+        //Если дата выдачи документа не пустая
+        if (cards.getDocdate() != null) {
+            pacient.setDocdate(formatter.format(cards.getDocdate()));
+        }
+
+        pacient.setDocorg(cards.getDocorg());
         pacient.setSnils(cards.getSnils());
         pacient.setOkatog("");
         pacient.setOkatop("");

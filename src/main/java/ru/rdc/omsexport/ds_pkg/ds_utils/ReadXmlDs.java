@@ -38,7 +38,7 @@ public class ReadXmlDs {
 
             for (int i = 0; i < nodeList.getLength(); i++) {
                 rowDSList.add(getRow(nodeList.item(i)));
-                System.out.println(i + " строка считана");
+                //System.out.println(i + " строка считана");
             }
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -95,8 +95,11 @@ public class ReadXmlDs {
             rowDS.setTarif(getTagValue("TARIF", element));
             rowDS.setCoeff(getTagValue("COEFF", element));
             rowDS.setMet_pr_kod(getTagValue("MET_PR_KOD", element));
+            rowDS.setDoctype(getTagValue("DOCTYPE", element));
             rowDS.setDocser(getTagValue("DOCSER", element));
             rowDS.setDocnum(getTagValue("DOCNUM", element));
+            rowDS.setDocorg(getTagValue("DOCORG", element));
+            rowDS.setDocdate(getTagValue("DOCDATE", element));
             rowDS.setSnils(getTagValue("SNILS", element));
             rowDS.setUsl_ksg(getTagValue("USL_KSG", element));
             rowDS.setUsl(getTagValue("USL", element));
@@ -149,7 +152,7 @@ public class ReadXmlDs {
                 return rez;
             }
         } catch (NullPointerException ex) {
-            AlertDialogUtils.showErrorAlert("Ошибка", null, "Ошибка чтения данных по стационару для полиса " + snpolNode.getNodeValue());
+            AlertDialogUtils.showErrorAlert("Ошибка c теге " + tag, null, "Ошибка чтения данных по стационару для полиса " + snpolNode.getNodeValue());
         }
         return rez;
 

@@ -34,6 +34,8 @@ public class Pacient {
     private String doctype;
     private String docser;
     private String docnum;
+    private String docdate;
+    private String docorg;
     private String snils;
     private String okatog;
     private String okatop;

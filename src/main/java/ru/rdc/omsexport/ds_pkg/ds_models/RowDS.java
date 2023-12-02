@@ -55,8 +55,11 @@ public class RowDS {
     private String tarif;
     private String coeff;
     private String met_pr_kod;
+    private String doctype;
     private String docser;
     private String docnum;
+    private String docorg;
+    private String docdate;
     private String snils;
     private String usl_ksg;
     private String usl;
