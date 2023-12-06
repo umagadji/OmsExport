@@ -39,6 +39,11 @@
                        <MenuItem mnemonicParsing="false" onAction="#onLoadCommentTypes" text="Выгрузить ошибки по типам" />
                     </items>
                   </Menu>
+                  <Menu mnemonicParsing="false" text="Санкции">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onWorkMEK" text="Работа с МЭК" />
+                     </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="О программе">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#onAbout" text="О программе" />

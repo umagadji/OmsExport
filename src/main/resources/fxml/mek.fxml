@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rdc.omsexport.controllers.MekController">
+   <children>
+      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <MenuBar>
+              <menus>
+                <Menu mnemonicParsing="false" text="Данные">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#onMekChoose" text="Загрузить файл МЭК" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Отчеты">
+                  <items>
+                    <MenuItem mnemonicParsing="false" onAction="#exportMEK" text="Выгрузить МЭК в Excel" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportMEKForTypes" text="Выгрузить по типам ошибок" />
+                        <MenuItem mnemonicParsing="false" onAction="#exportMEKPervysh" text="Выгрузить превышения" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
+            <VBox VBox.vgrow="ALWAYS">
+               <children>
+                  <TableView fx:id="tableMek" tableMenuButtonVisible="true" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="s_com" prefWidth="75.0" text="s_com" />
+                        <TableColumn fx:id="npolis" prefWidth="75.0" text="npolis" />
+                        <TableColumn fx:id="fio" prefWidth="75.0" text="fio" />
+                        <TableColumn fx:id="birthDate" prefWidth="75.0" text="birthDate" />
+                        <TableColumn fx:id="date_in" prefWidth="75.0" text="date_in" />
+                        <TableColumn fx:id="date_out" prefWidth="75.0" text="date_out" />
+                        <TableColumn fx:id="refreason" prefWidth="75.0" text="refreason" />
+                        <TableColumn fx:id="sumvUsl" prefWidth="75.0" text="sumvUsl" />
+                      <TableColumn fx:id="codeUsl" prefWidth="75.0" text="codeUsl" />
+                        <TableColumn fx:id="sankSum" prefWidth="75.0" text="sankSum" />
+                        <TableColumn fx:id="diagnosis" prefWidth="75.0" text="diagnosis" />
+                        <TableColumn fx:id="nameMO" prefWidth="75.0" text="nameMO" />
+                        <TableColumn fx:id="docCode" prefWidth="75.0" text="docCode" />
+                        <TableColumn fx:id="nhistory" prefWidth="75.0" text="nhistory" />
+                        <TableColumn fx:id="idstrax" prefWidth="75.0" text="idstrax" />
+                      <TableColumn fx:id="errorCode" prefWidth="75.0" text="errorCode" />
+                    </columns>
+                  </TableView>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <HBox alignment="CENTER_RIGHT">
+               <children>
+                  <Label fx:id="txtCount" text="Количество записей: 0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

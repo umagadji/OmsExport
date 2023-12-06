@@ -3,19 +3,25 @@ package ru.rdc.omsexport.controllers;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.ds_pkg.ds_utils.CreateDsAsumFile;
 import ru.rdc.omsexport.local_dbf_readers.WriteLocalDBTablesInDatabase;
+import ru.rdc.omsexport.mek.utils.CreateReportService;
 import ru.rdc.omsexport.utils.*;
 
 import java.io.File;
@@ -27,6 +33,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 @Controller
@@ -57,6 +64,9 @@ public class MainController implements Initializable {
     private final CreateDsAsumFile createDsAsumFile;
     private final ReportsClass reportsClass;
 
+    //Объявляем сервис, для работы с МЭК и таблицей услуг с планами и внедряем ее в основной контроллер
+    private final CreateReportService createReportService;
+
     @Autowired
     public MainController(
             WriteLocalDBTablesInDatabase writeLocalDBTablesInDatabase,
@@ -64,14 +74,15 @@ public class MainController implements Initializable {
             CreateRecAsumFile createRecAsumFile,
             CreateKpAsumFile createKpAsumFile,
             CreateDsAsumFile createDsAsumFile,
-            ReportsClass reportsClass
-    ) {
+            ReportsClass reportsClass,
+            ApplicationContext applicationContext, CreateReportService createReportService) {
         this.writeLocalDBTablesInDatabase = writeLocalDBTablesInDatabase;
         this.createDiagnAsumFile = createDiagnAsumFile;
         this.createRecAsumFile = createRecAsumFile;
         this.createKpAsumFile = createKpAsumFile;
         this.createDsAsumFile = createDsAsumFile;
         this.reportsClass = reportsClass;
+        this.createReportService = createReportService;
 
         //При внедрении бинследующих бинов им также устанавливаем текущий контроллер, чтобы эти класс-бины имел доступ к компонентам этого контроллера
         writeLocalDBTablesInDatabase.setMainController(this);
@@ -283,18 +294,42 @@ public class MainController implements Initializable {
     }
 
     public void onLoadAllUslFromDatabase(ActionEvent actionEvent) {
-        reportsClass.getAllUsl();
+        reportsClass.getAllUsl(mainStage);
     }
 
     public void onLoadIncorrectUslFromDatabase(ActionEvent actionEvent) {
-        reportsClass.getIncorrectUslFromDatabase();
+        reportsClass.getIncorrectUslFromDatabase(mainStage);
     }
 
     public void onLoadCommentTypes(ActionEvent actionEvent) {
-        reportsClass.getErrorsType();
+        reportsClass.getErrorsType(mainStage);
     }
 
     public void onExit(ActionEvent actionEvent) {
         Platform.exit();
+    }
+
+    public void onWorkMEK(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/mek.fxml"));
+            Parent root = loader.load(); // Загрузка содержимого FXML-файла
+
+            Stage mekStage = new Stage();
+            mekStage.setTitle("Работа с МЭК");
+            mekStage.getIcons().add(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/icon.png"))));
+            mekStage.initOwner(mainStage);
+
+            Scene scene = new Scene(root, 800, 500); // Установка размеров сцены
+            mekStage.setScene(scene);
+
+            MekController mekController = loader.getController();
+            mekController.setThisStage(mekStage);
+            //При открытии нового окна внедряем сервис для работы с МЭК и таблицей с услугами по планаам
+            mekController.setCreateReportService(createReportService);
+
+            mekStage.show();
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

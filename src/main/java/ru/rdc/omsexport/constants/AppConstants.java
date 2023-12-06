@@ -16,6 +16,8 @@ public class AppConstants {
     public static final String logsFilePath = "Logs\\";
     //Путь к папке с отчетами
     public static final String reportsFilePath = "Reports\\";
+    //Путь к папке с таблицей по плану
+    public static final String planFilePath = "Plan\\";
     //Имя файла для РДЦ
     public static final String ASUM_FILE_NAME_RDC = "ASUM050130";
     //Имя файла для РЭЦ

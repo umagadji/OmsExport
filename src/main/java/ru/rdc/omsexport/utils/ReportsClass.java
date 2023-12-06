@@ -1,8 +1,14 @@
 package ru.rdc.omsexport.utils;
 
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFRow;
+import org.apache.poi.xssf.streaming.SXSSFSheet;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -25,8 +31,8 @@ import java.util.List;
 //Класс для получения отчетов по услугам
 @Service
 public class ReportsClass {
-    private XSSFWorkbook workbook;
-    private XSSFSheet sheet;
+    private SXSSFWorkbook workbook;
+    private SXSSFSheet sheet;
 
     private final CardsService cardsService;
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -35,25 +41,25 @@ public class ReportsClass {
     @Autowired
     public ReportsClass(CardsService cardsService) {
         this.cardsService = cardsService;
-        workbook = new XSSFWorkbook();
+        workbook = new SXSSFWorkbook();
     }
 
-    public void getIncorrectUslFromDatabase() {
+    public void getIncorrectUslFromDatabase(Stage stage) {
         //Получаем некорректные услуги из базы данных
         List<Cards> list = cardsService.findAllByCorrect(false);
         yearMonth = getYearMonth(list);
-        generateCardsExcelFile(list);
+        generateCardsExcelFile(list, stage);
     }
 
-    public void getAllUsl() {
+    public void getAllUsl(Stage stage) {
         List<Cards> list = cardsService.getCardsList();
         yearMonth = getYearMonth(list);
-        generateCardsExcelFile(list);
+        generateCardsExcelFile(list, stage);
     }
 
-    public void getErrorsType() {
+    public void getErrorsType(Stage stage) {
         List<CommentCountsDTO> list = cardsService.getCommentsCounter();
-        generateCommentCountersExcelFile(list);
+        generateCommentCountersExcelFile(list, stage);
     }
 
     //Метод для получения даты и месяца отчетного периода из списка услуг для отчетов
@@ -67,11 +73,10 @@ public class ReportsClass {
     //Метод создает заголовки в Excel документе
     private void writeCardsHeader() {
         sheet = workbook.createSheet("Cards");
-        Row row = sheet.createRow(0);
+        SXSSFRow row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeight(11);
         style.setFont(font);
         createCell(row,0, "n_mkp", style);
         createCell(row,1, "comment", style);
@@ -108,7 +113,7 @@ public class ReportsClass {
 
     //Метод создает ячейку
     private void createCell(Row row, int columnCount, Object valueOfCell, CellStyle style) {
-        sheet.autoSizeColumn(columnCount);
+        //sheet.autoSizeColumn(columnCount);
         Cell cell = row.createCell(columnCount);
         if (valueOfCell instanceof Integer) {
             cell.setCellValue((Integer) valueOfCell);
@@ -130,12 +135,11 @@ public class ReportsClass {
     private void writeCards(List<Cards> list) {
         int rowCount = 1;
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(11);
+        Font font = workbook.createFont();
         style.setFont(font);
 
         for (Cards item : list) {
-            Row row = sheet.createRow(rowCount++);
+            SXSSFRow row = sheet.createRow(rowCount++);
             int columnCount = 0;
             createCell(row, columnCount++, item.getN_mkp(), style);
             createCell(row, columnCount++, item.getComment(), style);
@@ -172,12 +176,30 @@ public class ReportsClass {
     }
 
     //Сохраняем файл в Excel формат
-    private String generateCardsExcelFile(List<Cards> list) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private String generateCardsExcelFile(List<Cards> list, Stage stage) {
         String fileName = "report-" + yearMonth + "-" + LocalDateTime.now().format(formatter) + ".xlsx";
 
-        File dir = new File(AppConstants.reportsFilePath);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите место сохранения файла");
+        fileChooser.setInitialFileName(fileName);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+
+        File selectedFile = fileChooser.showSaveDialog(stage);
+
+        if (selectedFile != null) {
+            try (FileOutputStream outputStream = new FileOutputStream(selectedFile);
+                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
+                writeCardsHeader();
+                writeCards(list);
+                workbook.write(bufferedOutputStream);
+                workbook.close();
+                AlertDialogUtils.showInfoAlert("Информация", null, "Файл отчета успешно сохранен в: " + selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /*File dir = new File(AppConstants.reportsFilePath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -191,7 +213,7 @@ public class ReportsClass {
             AlertDialogUtils.showInfoAlert("Информация", null, "Файл отчета успешно сформирован в: " + AppConstants.reportsFilePath + fileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         return fileName;
     }
@@ -199,11 +221,10 @@ public class ReportsClass {
     //Метод создает заголовки в Excel документе
     private void writeCommentCountersHeader() {
         sheet = workbook.createSheet("Errors");
-        Row row = sheet.createRow(0);
+        SXSSFRow row = sheet.createRow(0);
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
+        Font font = workbook.createFont();
         font.setBold(true);
-        font.setFontHeight(11);
         style.setFont(font);
         createCell(row,0, "Ошибка", style);
         createCell(row,1, "Кол-во", style);
@@ -213,8 +234,7 @@ public class ReportsClass {
     private void writeCommentCounters(List<CommentCountsDTO> list) {
         int rowCount = 1;
         CellStyle style = workbook.createCellStyle();
-        XSSFFont font = workbook.createFont();
-        font.setFontHeight(11);
+        Font font = workbook.createFont();
         style.setFont(font);
 
         for (CommentCountsDTO item : list) {
@@ -226,12 +246,30 @@ public class ReportsClass {
     }
 
     //Сохраняем файл в Excel формат
-    private String generateCommentCountersExcelFile(List<CommentCountsDTO> list) {
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+    private String generateCommentCountersExcelFile(List<CommentCountsDTO> list, Stage stage) {
         String fileName = "report-" + LocalDateTime.now().format(formatter) + ".xlsx";
 
-        File dir = new File(AppConstants.reportsFilePath);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Выберите место сохранения файла");
+        fileChooser.setInitialFileName(fileName);
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Excel Files", "*.xlsx"));
+
+        File selectedFile = fileChooser.showSaveDialog(stage);
+
+        if (selectedFile != null) {
+            try (FileOutputStream outputStream = new FileOutputStream(selectedFile);
+                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
+                writeCommentCountersHeader();
+                writeCommentCounters(list);
+                workbook.write(bufferedOutputStream);
+                workbook.close();
+                AlertDialogUtils.showInfoAlert("Информация", null, "Файл отчета успешно сохранен в: " + selectedFile.getAbsolutePath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        /*File dir = new File(AppConstants.reportsFilePath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
@@ -245,7 +283,7 @@ public class ReportsClass {
             AlertDialogUtils.showInfoAlert("Информация", null, "Файл отчета успешно сформирован в: " + AppConstants.reportsFilePath + fileName);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
         return fileName;
     }
