@@ -10,6 +10,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.rdc.omsexport.mek.models.Err;
+import ru.rdc.omsexport.mek.models.ErrExtended;
 import ru.rdc.omsexport.utils.AlertDialogUtils;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -48,7 +49,7 @@ public class ReportsMek {
         cell.setCellStyle(style);
     }
 
-    public void createErrReport(List<Err> list, Stage stage) {
+    public void createErrReport(List<ErrExtended> list, Stage stage) {
         SXSSFWorkbook workbook = new SXSSFWorkbook();
         SXSSFSheet sheet = workbook.createSheet("MEK");
         SXSSFRow headerRow = sheet.createRow(0);
@@ -57,30 +58,33 @@ public class ReportsMek {
         font.setBold(true);
         headerStyle.setFont(font);
         createCell(headerRow,0, "desc", headerStyle);
-        createCell(headerRow,1, "npolis", headerStyle);
-        createCell(headerRow,2, "fio", headerStyle);
-        createCell(headerRow,3, "birthDate", headerStyle);
-        createCell(headerRow,4, "date_in", headerStyle);
-        createCell(headerRow,5, "date_out", headerStyle);
-        createCell(headerRow,6, "refreason", headerStyle);
-        createCell(headerRow,7, "sumvUsl", headerStyle);
-        createCell(headerRow,8, "codeUsl", headerStyle);
-        createCell(headerRow,9, "sankSum", headerStyle);
-        createCell(headerRow,10, "diagnosis", headerStyle);
-        createCell(headerRow,11, "nameMO", headerStyle);
-        createCell(headerRow,12, "docCode", headerStyle);
-        createCell(headerRow,13, "idstrax", headerStyle);
-        createCell(headerRow,14, "nhistory", headerStyle);
-        createCell(headerRow,15, "errorCode", headerStyle);
+        createCell(headerRow,1, "error", headerStyle);
+        createCell(headerRow,2, "npolis", headerStyle);
+        createCell(headerRow,3, "fio", headerStyle);
+        createCell(headerRow,4, "birthDate", headerStyle);
+        createCell(headerRow,5, "date_in", headerStyle);
+        createCell(headerRow,6, "date_out", headerStyle);
+        createCell(headerRow,7, "refreason", headerStyle);
+        createCell(headerRow,8, "sumvUsl", headerStyle);
+        createCell(headerRow,9, "codeUsl", headerStyle);
+        createCell(headerRow,10, "sankSum", headerStyle);
+        createCell(headerRow,11, "diagnosis", headerStyle);
+        createCell(headerRow,12, "nameMO", headerStyle);
+        createCell(headerRow,13, "docCode", headerStyle);
+        createCell(headerRow,14, "idstrax", headerStyle);
+        createCell(headerRow,15, "nhistory", headerStyle);
+        createCell(headerRow,16, "errorCode", headerStyle);
+        createCell(headerRow,17, "type", headerStyle);
 
         int rowCount = 1;
 
         CellStyle rowStyle = workbook.createCellStyle();
 
-        for (Err item : list) {
+        for (ErrExtended item : list) {
             SXSSFRow row = sheet.createRow(rowCount++);
             int columnCount = 0;
             createCell(row, columnCount++, item.getS_com(), rowStyle);
+            createCell(row, columnCount++, item.getError(), rowStyle);
             createCell(row, columnCount++, item.getNpolis(), rowStyle);
             createCell(row, columnCount++, item.getFio(), rowStyle);
             createCell(row, columnCount++, item.getBirthDate(), rowStyle);
@@ -96,6 +100,7 @@ public class ReportsMek {
             createCell(row, columnCount++, item.getIdstrax(), rowStyle);
             createCell(row, columnCount++, item.getNhistory(), rowStyle);
             createCell(row, columnCount++, item.getErrorCode(), rowStyle);
+            createCell(row, columnCount++, item.getType(), rowStyle);
         }
 
         String fileName = "report-" + LocalDateTime.now().format(formatter) + ".xlsx";

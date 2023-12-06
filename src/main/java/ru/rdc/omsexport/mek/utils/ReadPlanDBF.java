@@ -53,7 +53,7 @@ public class ReadPlanDBF {
         } catch (FileNotFoundException e) {
             //e.printStackTrace();
             System.out.println("Файл " + path + " не найден");
-            AlertDialogUtils.showErrorAlert("Ошибка", null, "Нет файлов для чтения или папка " + AppConstants.cardsDBFPath + " отсутствует");
+            AlertDialogUtils.showErrorAlert("Ошибка", null, "Нет файлов для чтения или папка " + AppConstants.planFilePath + " отсутствует");
         }
 
         return list;

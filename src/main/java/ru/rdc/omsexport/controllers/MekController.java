@@ -14,6 +14,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.springframework.stereotype.Controller;
 import ru.rdc.omsexport.mek.models.Err;
+import ru.rdc.omsexport.mek.models.ErrExtended;
 import ru.rdc.omsexport.mek.utils.CreateReportService;
 import ru.rdc.omsexport.mek.utils.ReadMekErrForXML;
 import ru.rdc.omsexport.mek.utils.ReportsMek;
@@ -29,6 +30,8 @@ public class MekController implements Initializable {
     private Stage thisStage;
     private ObservableList<Err> list;
     private ReportsMek reportsMek = new ReportsMek();
+
+    private List<ErrExtended> errExtendedList;
 
     @FXML
     private TableView<Err> tableMek;
@@ -128,22 +131,22 @@ public class MekController implements Initializable {
             //Сохраняем данные из XML в таблицу err в БД
             createReportService.saveErrTableinDB(list);
 
+            //Сохраняем данные из plan.dbf в таблицу plan в БД
+            createReportService.savePlanTable(createReportService.readPlanFiles());
+
+            //На основании таблиц err и plan создается новая таблица err_extended, содержащая поля из err и plan. Нужно чтобы на ее основании делать отчеты.
+            createReportService.saveErrExtentedTableInDB();
+
+            errExtendedList = createReportService.getAllErrExtendedList();
+
         } catch (Exception e) {
             System.out.println("Файл не выбран");
         }
-
-        //Сохраняем данные из plan.dbf в таблицу plan в БД
-        createReportService.savePlanTable(createReportService.readPlanFiles());
-
-        //На основании таблиц err и plan создается новая таблица err_extended, содержащая поля из err и plan. Нужно чтобы на ее основании делать отчеты.
-        createReportService.saveErrExtentedTableInDB();
-
-        AlertDialogUtils.showInfoAlert("Информация", null, "Данные МЭК успешно записаны в БД");
     }
 
     //Экспортирует весь МЭК так как он есть
     public void exportMEK(ActionEvent actionEvent) {
-        reportsMek.createErrReport(list, thisStage);
+        reportsMek.createErrReport(errExtendedList, thisStage);
     }
 
     public void exportMEKForTypes(ActionEvent actionEvent) {

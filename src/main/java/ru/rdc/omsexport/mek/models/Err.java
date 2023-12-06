@@ -39,9 +39,9 @@ public class Err {
     @Column
     private String docCode;
     @Column
-    private String sumvUsl;
+    private double sumvUsl;
     @Column
-    private String sankSum;
+    private double sankSum;
     @Column
     private String nhistory;
     @Column

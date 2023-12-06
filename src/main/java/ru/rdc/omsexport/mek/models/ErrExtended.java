@@ -39,9 +39,9 @@ public class ErrExtended {
     @Column
     private String docCode;
     @Column
-    private String sumvUsl;
+    private double sumvUsl;
     @Column
-    private String sankSum;
+    private double sankSum;
     @Column
     private String nhistory;
     @Column
@@ -52,11 +52,13 @@ public class ErrExtended {
     private String idstrax;
     @Column
     private String type;
+    @Column
+    private String error;
 
     public ErrExtended(String codeUsl, String errorCode, String fio, String birthDate,
                        String npolis, String refreason, String s_com, String diagnosis, String nameMO,
-                       String docCode, String sumvUsl, String sankSum, String nhistory, String date_in,
-                       String date_out, String idstrax, String type) {
+                       String docCode, double sumvUsl, double sankSum, String nhistory, String date_in,
+                       String date_out, String idstrax, String type, String error) {
         this.codeUsl = codeUsl;
         this.errorCode = errorCode;
         this.fio = fio;
@@ -74,6 +76,7 @@ public class ErrExtended {
         this.date_out = date_out;
         this.idstrax = idstrax;
         this.type = type;
+        this.error = error;
     }
 
     @Override

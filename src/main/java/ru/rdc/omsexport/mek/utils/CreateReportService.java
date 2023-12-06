@@ -3,6 +3,7 @@ package ru.rdc.omsexport.mek.utils;
 import org.springframework.stereotype.Service;
 import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.mek.models.Err;
+import ru.rdc.omsexport.mek.models.ErrExtended;
 import ru.rdc.omsexport.mek.models.Plan;
 import ru.rdc.omsexport.mek.service.ErrExtendedService;
 import ru.rdc.omsexport.mek.service.ErrService;
@@ -48,5 +49,10 @@ public class CreateReportService {
         errService.deleteAll();
         planService.deleteAll();
         errExtendedService.deleteAll();
+    }
+
+    //Получает все ошибки из расширенной таблицы МЭК
+    public List<ErrExtended> getAllErrExtendedList() {
+        return errExtendedService.getAllErrExtendedList();
     }
 }

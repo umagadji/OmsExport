@@ -13,6 +13,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 //Класс читает ERR из XML файла от ТФОМС
 public class ReadMekErrForXML {
@@ -58,9 +59,9 @@ public class ReadMekErrForXML {
             item.setDate_in(getTagValue("date_in", element));
             item.setDate_out(getTagValue("date_out", element));
             item.setRefreason(getTagValue("refreason", element));
-            item.setSumvUsl(getTagValue("sumvUsl", element));
+            item.setSumvUsl(Double.parseDouble(Objects.requireNonNull(getTagValue("sumvUsl", element))));
             item.setCodeUsl(getTagValue("codeUsl", element));
-            item.setSankSum(getTagValue("sankSum", element));
+            item.setSankSum(Double.parseDouble(Objects.requireNonNull(getTagValue("sankSum", element))));
             item.setDiagnosis(getTagValue("diagnosis", element));
             item.setNameMO(getTagValue("nameMO", element));
             item.setDocCode(getTagValue("docCode", element));
