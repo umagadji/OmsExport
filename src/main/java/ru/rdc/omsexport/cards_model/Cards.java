@@ -130,6 +130,8 @@ public class Cards implements Comparable<Cards> {
     private String mkb_code_p;
     @Column
     private int char_zab;
+    @Column
+    private long visitid;
 
     //Поле будет хранить признак включения или исключения услуги из оплаты. correct = true - означает что услуга корректна и можно на оплату подавать
     private boolean correct = true;

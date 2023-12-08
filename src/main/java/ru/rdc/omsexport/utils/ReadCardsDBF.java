@@ -264,6 +264,10 @@ public class ReadCardsDBF {
                     card.setChar_zab(Integer.parseInt(rowList.get(k).get("CHAR_ZAB")));
                 }
 
+                if (!rowList.get(k).get("VISITID").equals("null")) {
+                    card.setVisitid(Long.parseLong(rowList.get(k).get("VISITID")));
+                }
+
                 list.add(card);
             }
 
