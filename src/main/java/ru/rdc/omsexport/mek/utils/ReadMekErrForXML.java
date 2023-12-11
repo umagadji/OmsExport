@@ -11,12 +11,17 @@ import ru.rdc.omsexport.mek.models.Err;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 //Класс читает ERR из XML файла от ТФОМС
 public class ReadMekErrForXML {
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+
     public static ObservableList<Err> getMek(String filePath) {
         File xmlFile = new File(filePath);
         ObservableList<Err> rowList = null;
@@ -55,9 +60,9 @@ public class ReadMekErrForXML {
             item.setNpolis(getTagValue("npolis", element));
             //Объединяем в одно поле ФИО
             item.setFio(getTagValue("surname", element) + " " + getTagValue("name", element) + " " + getTagValue("patronymic", element));
-            item.setBirthDate(getTagValue("birthDate", element));
-            item.setDate_in(getTagValue("date_in", element));
-            item.setDate_out(getTagValue("date_out", element));
+            item.setBirthDate(LocalDate.parse(Objects.requireNonNull(getTagValue("birthDate", element)), formatter));
+            item.setDate_in(LocalDate.parse(Objects.requireNonNull(getTagValue("date_in", element)), formatter));
+            item.setDate_out(LocalDate.parse(Objects.requireNonNull(getTagValue("date_out", element)), formatter));
             item.setRefreason(getTagValue("refreason", element));
             item.setSumvUsl(Double.parseDouble(Objects.requireNonNull(getTagValue("sumvUsl", element))));
             item.setCodeUsl(getTagValue("codeUsl", element));

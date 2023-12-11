@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 //Класс представляет собой объект Err, который получаем из XML с сайта ТФОМС
 @Getter
 @Setter
@@ -25,7 +27,7 @@ public class ErrExtended {
     @Column
     private String fio;
     @Column
-    private String birthDate;
+    private LocalDate birthDate;
     @Column
     private String npolis;
     @Column
@@ -45,9 +47,9 @@ public class ErrExtended {
     @Column
     private String nhistory;
     @Column
-    private String date_in;
+    private LocalDate date_in;
     @Column
-    private String date_out;
+    private LocalDate date_out;
     @Column
     private String idstrax;
     @Column
@@ -55,10 +57,10 @@ public class ErrExtended {
     @Column
     private String error;
 
-    public ErrExtended(String codeUsl, String errorCode, String fio, String birthDate,
+    public ErrExtended(String codeUsl, String errorCode, String fio, LocalDate birthDate,
                        String npolis, String refreason, String s_com, String diagnosis, String nameMO,
-                       String docCode, double sumvUsl, double sankSum, String nhistory, String date_in,
-                       String date_out, String idstrax, String type, String error) {
+                       String docCode, double sumvUsl, double sankSum, String nhistory, LocalDate date_in,
+                       LocalDate date_out, String idstrax, String type, String error) {
         this.codeUsl = codeUsl;
         this.errorCode = errorCode;
         this.fio = fio;
