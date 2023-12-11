@@ -725,9 +725,10 @@ public class CreateDiagnAsumFile {
     //Добавил 13.04.2023 также разбивку по полям fam_n, im_n, ot_n, чтобы для новорожденных также формировались случаи. Но такого на практике не было
     //Добавил 14.07.2023 разбивку по полю inogor, чтобы случаи пациента делились по этому признаку. т.к. с 07.2023 изменился способ оплаты idsp, чтобы корректной проставновки его и реализации признака muvr из программы
     //Добавил 03.10.2023 разбивку также по полю usl_idsp, т.к. с 09.2023 ТФОМС ввел проверку на соответствие услуги способу оплаты
-    record KeyForBoxing(String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl, boolean inogor, int usl_idsp) {
+    //Добавил 11.12.2023 разбивку по visitid, чтобы в выгрузку попадали случаи так же как в МИС Ариадна (возможно лаб. услуги будут дробиться больше)
+    record KeyForBoxing(String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl, boolean inogor, int usl_idsp, long visitid) {
         public KeyForBoxing(Cards cards) {
-            this(cards.getSnPol(), cards.getLpu_shnm(), cards.getProfil(), cards.isMuvr(), cards.is_onkl(), cards.isInogor(), cards.getUsl_idsp());
+            this(cards.getSnPol(), cards.getLpu_shnm(), cards.getProfil(), cards.isMuvr(), cards.is_onkl(), cards.isInogor(), cards.getUsl_idsp(), cards.getVisitid());
         }
     }
 
