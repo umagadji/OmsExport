@@ -33,7 +33,7 @@ public class ErrExtendedService {
                         "when err.s_com like 'Код направившей медицинской организации не соответствует коду МО прикрепления%' then 'Код направившей медицинской организации не соответствует коду МО прикрепления' " +
                         "when err.s_com like 'Страховая медицинская организация не соответствует%' then 'Страховая медицинская организация не соответствует' " +
                         "when err.s_com like 'Нет прикрепления в иногороднем случае с основным диагнозом содержащим букву%' then 'Нет прикрепления в иногороднем случае с основным диагнозом содержащим букву' " +
-                        "else err.s_com end)" +
+                        "else err.s_com end, err.inogor, err.smo)" +
                         " from Err err left join Plan plan on err.codeUsl = plan.code_usl", ErrExtended.class);
 
         List<ErrExtended> list = query.getResultList();

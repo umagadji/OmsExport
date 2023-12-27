@@ -20,7 +20,7 @@ import java.util.Objects;
 
 //Класс читает ERR из XML файла от ТФОМС
 public class ReadMekErrForXML {
-    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss", Locale.ENGLISH);
+    private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
 
     public static ObservableList<Err> getMek(String filePath) {
         File xmlFile = new File(filePath);
@@ -56,23 +56,25 @@ public class ReadMekErrForXML {
 
         if (node.getNodeType() == Node.ELEMENT_NODE) {
             Element element = (Element) node;
-            item.setS_com(getTagValue("s_com", element));
-            item.setNpolis(getTagValue("npolis", element));
+            item.setCodeUsl(getTagValue("codeUsl", element));
+            item.setErrorCode(getTagValue("errorCode", element));
             //Объединяем в одно поле ФИО
             item.setFio(getTagValue("surname", element) + " " + getTagValue("name", element) + " " + getTagValue("patronymic", element));
             item.setBirthDate(LocalDate.parse(Objects.requireNonNull(getTagValue("birthDate", element)), formatter));
-            item.setDate_in(LocalDate.parse(Objects.requireNonNull(getTagValue("date_in", element)), formatter));
-            item.setDate_out(LocalDate.parse(Objects.requireNonNull(getTagValue("date_out", element)), formatter));
+            item.setNpolis(getTagValue("npolis", element));
             item.setRefreason(getTagValue("refreason", element));
-            item.setSumvUsl(Double.parseDouble(Objects.requireNonNull(getTagValue("sumvUsl", element))));
-            item.setCodeUsl(getTagValue("codeUsl", element));
-            item.setSankSum(Double.parseDouble(Objects.requireNonNull(getTagValue("sankSum", element))));
+            item.setS_com(getTagValue("s_com", element));
             item.setDiagnosis(getTagValue("diagnosis", element));
             item.setNameMO(getTagValue("nameMO", element));
             item.setDocCode(getTagValue("docCode", element));
+            item.setSumvUsl(Double.parseDouble(Objects.requireNonNull(getTagValue("sumvUsl", element))));
+            item.setSankSum(Double.parseDouble(Objects.requireNonNull(getTagValue("sankSum", element))));
             item.setNhistory(getTagValue("nhistory", element));
+            item.setDate_in(LocalDate.parse(Objects.requireNonNull(getTagValue("date_in", element)), formatter));
+            item.setDate_out(LocalDate.parse(Objects.requireNonNull(getTagValue("date_out", element)), formatter));
             item.setIdstrax(getTagValue("idstrax", element));
-            item.setErrorCode(getTagValue("errorCode", element));
+            item.setInogor(Boolean.parseBoolean(getTagValue("inogor", element)));
+            item.setSmo(getTagValue("smo", element));
         }
 
         return item;

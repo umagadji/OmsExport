@@ -52,6 +52,10 @@ public class Err {
     private LocalDate date_out;
     @Column
     private String idstrax;
+    @Column
+    private boolean inogor;
+    @Column
+    private String smo;
 
     @Override
     public String toString() {
@@ -72,6 +76,8 @@ public class Err {
                 ", date_in='" + date_in + '\'' +
                 ", date_out='" + date_out + '\'' +
                 ", idstrax='" + idstrax + '\'' +
+                ", inogor='" + inogor + '\'' +
+                ", smo='" + smo + '\'' +
                 '}';
     }
 }

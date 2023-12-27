@@ -56,11 +56,15 @@ public class ErrExtended {
     private String type;
     @Column
     private String error;
+    @Column
+    private boolean inogor;
+    @Column
+    private String smo;
 
     public ErrExtended(String codeUsl, String errorCode, String fio, LocalDate birthDate,
                        String npolis, String refreason, String s_com, String diagnosis, String nameMO,
                        String docCode, double sumvUsl, double sankSum, String nhistory, LocalDate date_in,
-                       LocalDate date_out, String idstrax, String type, String error) {
+                       LocalDate date_out, String idstrax, String type, String error, boolean inogor, String smo) {
         this.codeUsl = codeUsl;
         this.errorCode = errorCode;
         this.fio = fio;
@@ -79,6 +83,8 @@ public class ErrExtended {
         this.idstrax = idstrax;
         this.type = type;
         this.error = error;
+        this.inogor = inogor;
+        this.smo = smo;
     }
 
     @Override
@@ -100,6 +106,8 @@ public class ErrExtended {
                 ", date_in='" + date_in + '\'' +
                 ", date_out='" + date_out + '\'' +
                 ", idstrax='" + idstrax + '\'' +
+                ", inogor='" + inogor + '\'' +
+                ", smo='" + smo + '\'' +
                 '}';
     }
 }

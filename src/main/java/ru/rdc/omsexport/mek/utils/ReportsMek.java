@@ -9,7 +9,6 @@ import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.rdc.omsexport.mek.models.Err;
 import ru.rdc.omsexport.mek.models.ErrExtended;
 import ru.rdc.omsexport.utils.AlertDialogUtils;
 import java.io.BufferedOutputStream;
@@ -74,7 +73,9 @@ public class ReportsMek {
         createCell(headerRow,14, "idstrax", headerStyle);
         createCell(headerRow,15, "nhistory", headerStyle);
         createCell(headerRow,16, "errorCode", headerStyle);
-        createCell(headerRow,17, "type", headerStyle);
+        createCell(headerRow,17, "inogor", headerStyle);
+        createCell(headerRow,18, "smo", headerStyle);
+        createCell(headerRow,19, "type", headerStyle);
 
         int rowCount = 1;
 
@@ -100,6 +101,8 @@ public class ReportsMek {
             createCell(row, columnCount++, item.getIdstrax(), rowStyle);
             createCell(row, columnCount++, item.getNhistory(), rowStyle);
             createCell(row, columnCount++, item.getErrorCode(), rowStyle);
+            createCell(row, columnCount++, item.isInogor(), rowStyle);
+            createCell(row, columnCount++, item.getSmo(), rowStyle);
             createCell(row, columnCount++, item.getType(), rowStyle);
         }
 

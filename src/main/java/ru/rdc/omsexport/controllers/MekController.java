@@ -68,6 +68,10 @@ public class MekController implements Initializable {
     @FXML
     private TableColumn<Err, String> idstrax;
     @FXML
+    private TableColumn<Err, String> inogor;
+    @FXML
+    private TableColumn<Err, String> smo;
+    @FXML
     private Label txtCount;
 
     private String inputFileMEK = "";
@@ -122,6 +126,8 @@ public class MekController implements Initializable {
             date_in.setCellValueFactory(new PropertyValueFactory<Err, String>("date_in"));
             date_out.setCellValueFactory(new PropertyValueFactory<Err, String>("date_out"));
             idstrax.setCellValueFactory(new PropertyValueFactory<Err, String>("idstrax"));
+            inogor.setCellValueFactory(new PropertyValueFactory<Err, String>("inogor"));
+            smo.setCellValueFactory(new PropertyValueFactory<Err, String>("smo"));
 
             // заполняем таблицу данными
             tableMek.setItems(list);
