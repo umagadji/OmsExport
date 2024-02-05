@@ -9,14 +9,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFRow;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.rdc.omsexport.cards_model.Cards;
 import ru.rdc.omsexport.cards_model.CommentCountsDTO;
-import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.services.CardsService;
 
 import java.io.BufferedOutputStream;
@@ -162,7 +158,7 @@ public class ReportsClass {
             createCell(row, columnCount++, item.getLpu_name(), style);
             createCell(row, columnCount++, item.getLpu_shnm(), style);
             createCell(row, columnCount++, item.getMet_name(), style);
-            createCell(row, columnCount++, item.getMet_pr_kod(), style);
+            createCell(row, columnCount++, item.getMetPrKod(), style);
             createCell(row, columnCount++, item.getMkb_code(), style);
             createCell(row, columnCount++, item.getMkb_code_p(), style);
             createCell(row, columnCount++, item.getN_cab(), style);

@@ -165,7 +165,7 @@ public class ReadCardsDBF {
                 }
 
                 if (!rowList.get(k).get("MET_PR_KOD").equals("null")) {
-                    card.setMet_pr_kod(rowList.get(k).get("MET_PR_KOD"));
+                    card.setMetPrKod(rowList.get(k).get("MET_PR_KOD"));
                 }
 
                 if (!rowList.get(k).get("N_MET").equals("null")) {

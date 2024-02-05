@@ -26,6 +26,8 @@ public class AppConstants {
     public static final String ASUM_FILE_NAME_KP = "ASUM050132";
     //Имя файла для Стационаров
     public static final String ASUM_FILE_NAME_DS = "ASUM05011D";
+    //Имя файла для Стационаров
+    public static final String ASUM_FILE_NAME_STOM = "ASUM0501YD";
     //Длина кода СМО
     public static final int SMO_CODE_LENGTH = 5;
     //Длина кода медуслуги стандартная = 5
@@ -50,26 +52,31 @@ public class AppConstants {
     public static final String SLUCH_ISHOD_30 = "601";
     public static final String SLUCH_ISHOD_31 = "304";
     public static final String SLUCH_ISHOD_32 = "304";
+    public static final String SLUCH_ISHOD_YD = "501";
 
     //Результат обращения для отделений
     public static final String SLUCH_RSLT_30 = "604";
     public static final String SLUCH_RSLT_31 = "308";
     public static final String SLUCH_RSLT_32 = "308";
+    public static final String SLUCH_RSLT_YD = "501";
 
     //usl_ok для услуг
     public static final String SLUCH_USL_OK_30 = "6";
     public static final String SLUCH_USL_OK_31 = "3";
     public static final String SLUCH_USL_OK_32 = "3";
+    public static final String SLUCH_USL_OK_YD = "5";
 
     //Цель посещения для услуг
     public static final String USL_PCEL_30 = "2.6";
     public static final String USL_PCEL_31 = "1";
     public static final String USL_PCEL_32 = "1";
+    public static final String USL_PCEL_YD = "3"; //Стоматология
 
     //Коэффициент для услуг
     public static final String USL_KOEFK_30 = "0.00";
     public static final String USL_KOEFK_31 = "1.00";
     public static final String USL_KOEFK_32 = "1.00";
+    public static final String USL_KOEFK_YD = "0.00"; //Стоматология
 
     //Форма оказания помощи
     public static final String SLUSH_FOR_POM = "3";
@@ -78,6 +85,7 @@ public class AppConstants {
     public static final String ARIADNA_USL_RAZDEL_OPPZ = "10.2.1"; //Обращения по поводу заболевания
     public static final String ARIADNA_USL_RAZDEL_PROFPR = "10.2.2"; //Проф. приемы
     public static final String ARIADNA_USL_RAZDEL_SCHOOL = "10.2.3"; //Школа диабета
+    public static final String ARIADNA_USL_RAZDEL_STOMATOLOGY = "10.2.4"; //Стоматология
 
     //Характер заболевания в МИС
     public static final int ARIADNA_CHAR_ZAB_OSTROE = 1; //Острое
@@ -93,6 +101,7 @@ public class AppConstants {
     public static final String TFOMS_CODE_RDC = "050130"; //Диагностика
     public static final String TFOMS_CODE_REC = "050131"; //РЭЦ
     public static final String TFOMS_CODE_KP = "050132"; //Поликлиника
+    public static final String TFOMS_CODE_KPSTOM = "0501YD"; //Стоматология
 
     //Код Glpu РДЦ
     public static final String GLPU_RDC = "050130"; //Glpu РДЦ

@@ -17,9 +17,6 @@ import java.util.List;
 public class CardsService {
     private final CardsRepository repository;
 
-    @PersistenceContext
-    private EntityManager entityManager;
-
     public CardsService(CardsRepository repository) {
         this.repository = repository;
     }
@@ -48,6 +45,11 @@ public class CardsService {
     //Получаем поликлинические исследования
     public List<Cards> getCardsKpList() {
         return repository.findAllByOtdInAndCorrect(new ArrayList<>(List.of(7)), true);
+    }
+
+    //Получаем стоматологические исследования
+    public List<Cards> getCardsKpStomList() {
+        return repository.findAllByOtdInAndCorrectAndMetPrKod(new ArrayList<>(List.of(7)), true, "10.2.4");
     }
 
     public List<Cards> findAllByCorrect(boolean correct) {

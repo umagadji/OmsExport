@@ -53,7 +53,31 @@ public class CreateAsumElements {
         usl.setNpolis(cards.getNpolis());
         usl.setGlpu(AppConstants.GLPU_RDC);
 
-        if (cards.getOtd() == 1 || cards.getOtd() == 2 || cards.getOtd() == 3 || cards.getOtd() == 4 || cards.getOtd() == 5) {
+        switch (cards.getMcod()) {
+            case "050130" -> {
+                usl.setMcod(AppConstants.TFOMS_CODE_RDC);
+                usl.setP_cel(AppConstants.USL_PCEL_30);
+                usl.setKoefk(AppConstants.USL_KOEFK_30);
+            }
+            case "050131" -> {
+                usl.setMcod(AppConstants.TFOMS_CODE_REC);
+                usl.setP_cel(AppConstants.USL_PCEL_31);
+                usl.setKoefk(AppConstants.USL_KOEFK_31);
+            }
+            case "050132" -> {
+                usl.setMcod(AppConstants.TFOMS_CODE_KP);
+                usl.setP_cel(AppConstants.USL_PCEL_32);
+                usl.setKoefk(AppConstants.USL_KOEFK_32);
+            }
+            case "0501YD" -> {
+                usl.setMcod(AppConstants.TFOMS_CODE_KPSTOM);
+                usl.setP_cel(AppConstants.USL_PCEL_YD);
+                usl.setKoefk(AppConstants.USL_KOEFK_YD);
+            }
+            default -> System.out.println("Неизвестное отделение");
+        }
+
+        /*if (cards.getOtd() == 1 || cards.getOtd() == 2 || cards.getOtd() == 3 || cards.getOtd() == 4 || cards.getOtd() == 5) {
             usl.setMcod(AppConstants.TFOMS_CODE_RDC);
             usl.setP_cel(AppConstants.USL_PCEL_30);
             usl.setKoefk(AppConstants.USL_KOEFK_30);
@@ -67,7 +91,7 @@ public class CreateAsumElements {
             usl.setKoefk(AppConstants.USL_KOEFK_32);
         } else {
             System.out.println("Неизвестное отделение");
-        }
+        }*/
 
         usl.setPodr("");
         usl.setProfil(Objects.requireNonNull(spTarifExtendedService.findByKsg(cards.getCode_usl()).orElse(null)).getIdpr() + ""); //Берем профиль из услуги из sp_tarif
@@ -158,7 +182,31 @@ public class CreateAsumElements {
         sluch.setId(UUID.randomUUID().toString().toUpperCase());
         sluch.setIdcase("0");
 
-        if (cardsList.get(0).getOtd() == 1 || cardsList.get(0).getOtd() == 2 ||
+        if (cardsList.get(0).getMcod().equals("050130")) {
+            sluch.setMcod(AppConstants.TFOMS_CODE_RDC);
+            sluch.setUsl_ok(AppConstants.SLUCH_USL_OK_30);
+            sluch.setRslt(AppConstants.SLUCH_RSLT_30);
+            sluch.setIshod(AppConstants.SLUCH_ISHOD_30);
+        } else if (cardsList.get(0).getMcod().equals("050131")) {
+            sluch.setMcod(AppConstants.TFOMS_CODE_REC);
+            sluch.setUsl_ok(AppConstants.SLUCH_USL_OK_31);
+            sluch.setRslt(AppConstants.SLUCH_RSLT_31);
+            sluch.setIshod(AppConstants.SLUCH_ISHOD_31);
+        } else if (cardsList.get(0).getMcod().equals("050132")) {
+            sluch.setMcod(AppConstants.TFOMS_CODE_KP);
+            sluch.setUsl_ok(AppConstants.SLUCH_USL_OK_32);
+            sluch.setRslt(AppConstants.SLUCH_RSLT_32);
+            sluch.setIshod(AppConstants.SLUCH_ISHOD_32);
+        } else if (cardsList.get(0).getMcod().equals("0501YD")) {
+            sluch.setMcod(AppConstants.TFOMS_CODE_KPSTOM);
+            sluch.setUsl_ok(AppConstants.SLUCH_USL_OK_YD);
+            sluch.setRslt(AppConstants.SLUCH_RSLT_YD);
+            sluch.setIshod(AppConstants.SLUCH_ISHOD_YD);
+        } else {
+            System.out.println("Неизвестное отделение");
+        }
+
+        /*if (cardsList.get(0).getOtd() == 1 || cardsList.get(0).getOtd() == 2 ||
                 cardsList.get(0).getOtd() == 3 || cardsList.get(0).getOtd() == 4 || cardsList.get(0).getOtd() == 5) {
             sluch.setMcod(AppConstants.TFOMS_CODE_RDC);
             sluch.setUsl_ok(AppConstants.SLUCH_USL_OK_30);
@@ -176,7 +224,7 @@ public class CreateAsumElements {
             sluch.setIshod(AppConstants.SLUCH_ISHOD_32);
         } else {
             System.out.println("Неизвестное отделение");
-        }
+        }*/
 
         //Берем профиль из услуги из sp_tarif
         sluch.setProfil(Objects.requireNonNull(spTarifExtendedService.findByKsg(cardsList.get(0).getCode_usl()).orElse(null)).getIdpr() + "");

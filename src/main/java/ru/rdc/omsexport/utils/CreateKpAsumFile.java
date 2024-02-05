@@ -289,14 +289,14 @@ public class CreateKpAsumFile {
             //ПРОВЕРКА МЕДУСЛУГИ. НАЧАЛО
             if (card.isCorrect()) {
                 //Если раздел прейскуранта не относится к ОППЗ, проф. приемам и школе диабета
-                if (!card.getMet_pr_kod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
-                        !card.getMet_pr_kod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR)) {
+                if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR)) {
                     card.setCorrect(false);
-                    card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMet_pr_kod() + " для услуги " + card.getCode_usl());
+                    card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректный раздел медуслуги в Ариадне " + card.getMet_pr_kod());
+                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректный раздел медуслуги в Ариадне " + card.getMet_pr_kod());
+                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
                 } else {
                     //Если раздел прейскуранта правильный, но длина услуги равна 0
                     if (card.getCode_usl().trim().length() == 0) {
@@ -308,7 +308,7 @@ public class CreateKpAsumFile {
                                 + " Некорректный код медуслуги ФОМС " + card.getCode_usl());
                     } else {
                         //Если раздел прейскуранта ОППЗ
-                        if (card.getMet_pr_kod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ)) {
+                        if (card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ)) {
                             //Если код услуги равен стандартной, т.е. 5
                             if (card.getCode_usl().trim().length() == AppConstants.CODE_USL_STANDART_LEN) {
                                 //Значит это обращение по поводу заболевания

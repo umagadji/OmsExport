@@ -18,12 +18,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
+import ru.rdc.omsexport.asum_models.Vrachi;
+import ru.rdc.omsexport.asum_models.Zap;
+import ru.rdc.omsexport.asum_models.Zglv;
 import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.ds_pkg.ds_utils.CreateDsAsumFile;
 import ru.rdc.omsexport.local_dbf_readers.WriteLocalDBTablesInDatabase;
 import ru.rdc.omsexport.mek.utils.CreateReportService;
 import ru.rdc.omsexport.utils.*;
 
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -37,13 +44,13 @@ import java.util.*;
 @Scope("singleton")
 public class MainController implements Initializable {
     @FXML
-    private CheckBox chk1, chk2, chk3, chk4, chk5, chk6, chk7, chkStac;
+    private CheckBox chk1, chk2, chk3, chk4, chk5, chk6, chk7, chkStac, chk7stom, chkAll;
     @FXML
     private DatePicker dateStart, dateEnd;
     @FXML
     private TextArea logs;
     @FXML
-    private Label counterRdc, counterRec, counterKp, counterDs, txtDsFileInfo, sluchCounterRDC, sluchCounterREC, sluchCounterKP;
+    private Label counterRdc, counterRec, counterKp, counterDs, txtDsFileInfo, sluchCounterRDC, sluchCounterREC, sluchCounterKP, sluchCounterKPStom, counterKpStom;
 
     //Чекбокс для того, чтобы выставить даты услуг, выполненных позднее текущей привести к текущей дате. Добавил 22.10.2023 чтобы не получать новый ФЛК для предварительных файлов. Будет использоваться только для диагностики
     @FXML
@@ -59,6 +66,7 @@ public class MainController implements Initializable {
     private final CreateRecAsumFile createRecAsumFile;
     private final CreateKpAsumFile createKpAsumFile;
     private final CreateDsAsumFile createDsAsumFile;
+    private final CreateStomAsumFile createStomAsumFile;
     private final ReportsClass reportsClass;
 
     //Объявляем сервис, для работы с МЭК и таблицей услуг с планами и внедряем ее в основной контроллер
@@ -71,6 +79,7 @@ public class MainController implements Initializable {
             CreateRecAsumFile createRecAsumFile,
             CreateKpAsumFile createKpAsumFile,
             CreateDsAsumFile createDsAsumFile,
+            CreateStomAsumFile createStomAsumFile,
             ReportsClass reportsClass,
             ApplicationContext applicationContext, CreateReportService createReportService) {
         this.writeLocalDBTablesInDatabase = writeLocalDBTablesInDatabase;
@@ -78,6 +87,7 @@ public class MainController implements Initializable {
         this.createRecAsumFile = createRecAsumFile;
         this.createKpAsumFile = createKpAsumFile;
         this.createDsAsumFile = createDsAsumFile;
+        this.createStomAsumFile = createStomAsumFile;
         this.reportsClass = reportsClass;
         this.createReportService = createReportService;
 
@@ -87,6 +97,7 @@ public class MainController implements Initializable {
         createRecAsumFile.setMainController(this);
         createKpAsumFile.setMainController(this);
         createDsAsumFile.setMainController(this);
+        createStomAsumFile.setMainController(this);
     }
 
     public void setMainStage(Stage mainStage) {
@@ -113,6 +124,10 @@ public class MainController implements Initializable {
         return counterKp;
     }
 
+    public Label getCounterKpStom() {
+        return counterKpStom;
+    }
+
     public Label getSluchCounterRDC() {
         return sluchCounterRDC;
     }
@@ -123,6 +138,10 @@ public class MainController implements Initializable {
 
     public Label getSluchCounterKP() {
         return sluchCounterKP;
+    }
+
+    public Label getSluchCounterKPStom() {
+        return sluchCounterKPStom;
     }
 
     @Override
@@ -183,6 +202,12 @@ public class MainController implements Initializable {
                         createKpAsumFile.createKpAsumFile(createKpAsumFile.getZapList());
                     }
 
+                    if (otdList.contains("7stom")) {
+                        createStomAsumFile.setPeriod(dateStart.getValue(), dateEnd.getValue());
+                        createStomAsumFile.selectCorrectCardsStom();
+                        createStomAsumFile.createStomAsumFile(createStomAsumFile.getZapList());
+                    }
+
                     if (otdList.contains("ds")) {
                         createDsAsumFile.setPeriod(dateStart.getValue(), dateEnd.getValue());
                         createDsAsumFile.selectCorrectRows(inputFileDS);
@@ -230,6 +255,10 @@ public class MainController implements Initializable {
 
         if (chk7.isSelected()) {
             otdList.add("7");
+        }
+
+        if (chk7stom.isSelected()) {
+            otdList.add("7stom"); //Стоматология
         }
 
         if (chkStac.isSelected()) {
@@ -327,6 +356,31 @@ public class MainController implements Initializable {
             mekStage.show();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
+        }
+    }
+
+    //При нажатии на все кнопки
+    public void onAllSelected(ActionEvent actionEvent) {
+        if (chkAll.isSelected()) {
+            chk1.setSelected(true);
+            chk2.setSelected(true);
+            chk3.setSelected(true);
+            chk4.setSelected(true);
+            chk5.setSelected(true);
+            chk6.setSelected(true);
+            chk7.setSelected(true);
+            chkStac.setSelected(true);
+            chk7stom.setSelected(true);
+        } else {
+            chk1.setSelected(false);
+            chk2.setSelected(false);
+            chk3.setSelected(false);
+            chk4.setSelected(false);
+            chk5.setSelected(false);
+            chk6.setSelected(false);
+            chk7.setSelected(false);
+            chkStac.setSelected(false);
+            chk7stom.setSelected(false);
         }
     }
 }

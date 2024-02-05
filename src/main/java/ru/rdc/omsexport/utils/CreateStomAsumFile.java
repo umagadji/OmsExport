@@ -17,18 +17,14 @@ import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
-//Класс для создания ASUM файл для диагностики
+//Класс для создания ASUM файл для Стоматологии
 @Service
-public class CreateDiagnAsumFile {
+public class CreateStomAsumFile {
     Map<String, Vrachi> vrachiMap = new HashMap<>(); //Будет хранить всех уникальных врачей
     private static String yearMonth = ""; //Хранит год и месяц для названия файла
     private boolean isChkPredUslDate = false; //Проверка установлен ли чекбокс chkPredUslDate
@@ -41,7 +37,7 @@ public class CreateDiagnAsumFile {
     private final MedspecService medspecService;
 
     @Autowired
-    public CreateDiagnAsumFile(
+    public CreateStomAsumFile(
             SmoService smoService,
             SlpuService slpuService,
             MedspecService medspecService,
@@ -79,12 +75,12 @@ public class CreateDiagnAsumFile {
         System.out.println(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss").format(LocalDateTime.now()) + " " + message);
     }
 
-    private void setCounterRDC(int all, int checked) {
-        Platform.runLater(() -> mainController.getCounterRdc().setText("РДЦ: " + all + " / " + checked));
+    private void setCounterStom(int all, int checked) {
+        Platform.runLater(() -> mainController.getCounterKpStom().setText("СТОМ: " + all + " / " + checked));
     }
 
-    private void setSluchCounterRdc(int counter) {
-        Platform.runLater(() -> mainController.getSluchCounterRDC().setText("/ Случаев: " + counter));
+    private void setSluchCounterStom(int counter) {
+        Platform.runLater(() -> mainController.getSluchCounterKPStom().setText("/ Случаев: " + counter));
     }
 
     public void setPeriod(LocalDate bgnDate, LocalDate endDate) {
@@ -98,85 +94,41 @@ public class CreateDiagnAsumFile {
         }
     }
 
-    //Передаем List<String> checks параметры, чтобы знать для каких отделений делать расчет.
-    //Значения параметров приходят из контроллера MainController
-    //Чтение диагностических входных таблиц Cards
-    public List<Cards> readCardsDiagnDBF(List<String> list) {
-        //Коллекция будет содержать услуги по диагностике
-        List<Cards> diagnList = new ArrayList<>();
+    //Чтение стоматологических входных таблиц Cards. Используется таблица для поликлиники
+    public List<Cards> readCardsStomDBF() {
+        setLogs("Начало чтения стоматологических входящих таблиц выгрузки (DBF).");
+        setLogsInConsole("Начало чтения стоматологических входящих таблиц выгрузки (DBF).");
 
-        if (list.size() > 0) {
-            setLogs("Начало чтения диагностических входящих таблиц выгрузки (DBF).");
-            setLogsInConsole("Начало чтения диагностических входящих таблиц выгрузки (DBF).");
+        setLogs("Расчет для стоматологии выполняется");
+        setLogsInConsole("Расчет для стоматологии выполняется");
+        List<Cards> stomList = new ArrayList<>(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_kp.dbf", "866"));
 
-            if (list.contains("1")) {
-                setLogs("Расчет для ОФД выполняется");
-                setLogsInConsole("Расчет для ОФД выполняется");
-                diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_fd.dbf", "866"));
-            }
+        setLogs("Конец чтения стоматологических входящих таблиц выгрузки (DBF).");
+        setLogsInConsole("Конец чтения стоматологических входящих таблиц выгрузки (DBF).");
 
-            //Для эндоскопии необходимо, чтобы также расчет выполнялся по КП, чтобы услуги ларингоскопии из КП добавить в эндоскопию
-            if (list.contains("2") && list.contains("7")) {
-                setLogs("Расчет для эндоскопии выполняется");
-                setLogsInConsole("Расчет для эндоскопии выполняется");
-                diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_endosk.dbf", "866"));
-
-                //Читаем dbf поликлиники и берем оттуда услугу 56882 (ларингоскопия)
-                List<Cards> cardsPolList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_kp.dbf", "866")
-                        .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56882")).toList();
-
-                //Заменяем номер отделения на эндоскопию
-                cardsPolList.forEach(cardsDiagn -> cardsDiagn.setOtd(2));
-
-                //Добавляем в коллекцию с диагностическими услугами
-                diagnList.addAll(cardsPolList);
-            }
-
-            if (list.contains("3")) {
-                setLogs("Расчет для УЗИ выполняется");
-                setLogsInConsole("Расчет для УЗИ выполняется");
-                diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_uzi.dbf", "866"));
-            }
-
-            if (list.contains("4")) {
-                setLogs("Расчет для рентген выполняется");
-                setLogsInConsole("Расчет для рентген выполняется");
-                diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_rentgen.dbf", "866"));
-            }
-
-            if (list.contains("5")) {
-                setLogs("Расчет для лаборатории выполняется");
-                setLogsInConsole("Расчет для лаборатории выполняется");
-                diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_lab.dbf", "866"));
-            }
-
-            setLogs("Конец чтения диагностических входящих таблиц выгрузки (DBF).");
-            setLogsInConsole("Конец чтения диагностических входящих таблиц выгрузки (DBF).");
-        }
-
-        //Возвращаем коллекцию diagnList
-        return diagnList;
+        //Возвращаем коллекцию stomList
+        return stomList;
     }
 
-    //Метод будет каждую диагностическую услугу из cards отмечать годными для подачи на оплату и устанавливать доп. параметры такие как comment, t_type, is_onkl
+    //Метод будет каждую стоматологическую услугу из cards отмечать годными для подачи на оплату и устанавливать доп. параметры такие как comment, t_type, is_onkl
     //Передаем List<String> checks параметры, чтобы знать для каких отделений делать расчет.
-    //Проверяем диагностические услуги
-    public void selectCorrectCardsDiagn(List<String> checks) {
+    //Проверяем стоматологическе услуги
+    public void selectCorrectCardsStom() {
         //Содержит проверенные услуги
-        List<Cards> allCardsListDiagnDiagn = readCardsDiagnDBF(checks);
+        List<Cards> allCardsListStom = readCardsStomDBF();
 
-        //Для каждой услуги из allCardsDiagnList выполняем проверки на допустимость подачи на оплату
-        setLogs("Начало проверки корректности диагностических услуг.");
-        setLogsInConsole("Начало проверки корректности диагностических услуг.");
+        //Для каждой услуги из allCardsStomList выполняем проверки на допустимость подачи на оплату
+        setLogs("Начало проверки корректности стоматологических услуг.");
+        setLogsInConsole("Начало проверки корректности стоматологических услуг.");
         int counter = 0; //Счетчик проверки услуг
-        for (Cards card : allCardsListDiagnDiagn) {
+        for (Cards card : allCardsListStom) {
 
             //Выводим кол-во проверенных услуг
             counter++;
-            setCounterRDC(allCardsListDiagnDiagn.size(),counter);
+            setCounterStom(allCardsListStom.size(),counter);
 
-            //Для упрощения всем диаг. услугам ставим mcod = 050130
-            card.setMcod(AppConstants.TFOMS_CODE_RDC);
+            //Для упрощения всем стом. услугам ставим mcod = 0501YD
+            card.setMcod(AppConstants.TFOMS_CODE_KPSTOM);
 
             //ПРОВЕРКИ ИЗ EXCEL. НАЧАЛО
             //Если для пациента указано в отчестве БО, Б-О, Б.О.
@@ -233,14 +185,6 @@ public class CreateDiagnAsumFile {
                 card.setComment("Исключается из оплаты: lpu_shnm = ~~~");
             }
 
-            if (card.getProfil() != 15 && card.getProfil() != 34 && card.getProfil() != 67 && card.getMkb_code().trim().equals("Z01.7")) {
-                card.setMkb_code("Z03.8");
-            }
-
-            if (card.getProfil() != 15 && card.getProfil() != 34 && card.getProfil() != 67 && card.getMkb_code_p().trim().equals("Z01.7")) {
-                card.setMkb_code_p("Z03.8");
-            }
-
             if (card.getNpolis().trim().equals("") || card.getNpolis() == null) {
                 card.setCorrect(false);
                 card.setComment("Ошибка полиса: Номер полиса пустой");
@@ -270,7 +214,6 @@ public class CreateDiagnAsumFile {
                 card.setCorrect(false);
                 card.setComment("Ошибка полиса: Тип полиса пустой");
             }
-
             //ПРОВЕРКИ ИЗ EXCEL. КОНЕЦ
 
             //Получаем optional из таблицы s_lpu по mcod. lpu_shnm - это mcod (подразделение, которое направило)
@@ -313,6 +256,16 @@ public class CreateDiagnAsumFile {
                                 + " Некорректное СМО у НЕиногороднего " + card.getSmocod());
                     }
                 }
+            }
+
+            //Если раздел прейскуранта не стоматология
+            if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_STOMATOLOGY)) {
+                card.setCorrect(false);
+                card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl());
+                setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
+                        + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
+                setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
+                        + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
             }
 
             //Если услуга не исключается, то проверяем на наличие smocod в таблице smo.dbf
@@ -360,7 +313,7 @@ public class CreateDiagnAsumFile {
                             if (card.getTarif() != spTarifNewOptional.get().getPrice()) {
                                 card.setTarif(spTarifNewOptional.get().getPrice());
                             }
-                            //Добавляем в cards_diagn информацию о t_type из sp_tarif_extended
+                            //Добавляем в cards_stom информацию о t_type из sp_tarif_extended
                             card.setT_type(spTarifNewOptional.get().getT_type());
                             //Добавляем в cards профиль для дальнейшей группировки услуг по профилям
                             card.setProfil(spTarifNewOptional.get().getIdpr());
@@ -392,7 +345,7 @@ public class CreateDiagnAsumFile {
                             setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                     + " Код МКБ mkb_code_p не найден в mkb.dbf = " + card.getMkb_code_p());
                         } else {
-                            //Добавляем в cards_diagn информацию о is_onkl из mkb_extended
+                            //Добавляем в cards_stom информацию о is_onkl из mkb_extended
                             card.set_onkl(mkbExtendedOptionalMkbCodeP.get().is_onk());
                             //Если есть нормальный первичный код, то его делаем также основным
                             card.setMkb_code(mkbExtendedOptionalMkbCodeP.get().getLcod());
@@ -407,7 +360,7 @@ public class CreateDiagnAsumFile {
                             setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                     + " Код МКБ mkb_code не найден в mkb.dbf = " + card.getMkb_code());
                         } else {
-                            //Добавляем в cards_diagn информацию о is_onkl из mkb_extended
+                            //Добавляем в cards_stom информацию о is_onkl из mkb_extended
                             card.set_onkl(mkbExtendedOptionalForMkbCode.get().is_onk());
                         }
                     }
@@ -439,25 +392,6 @@ public class CreateDiagnAsumFile {
                             + " Некорректное направившее ЛПУ " + card.getLpu_shnm());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректное направившее ЛПУ " + card.getLpu_shnm());
-                }
-
-                //Проверяем по направившим ЛПУ КП РДЦ и РЭЦ РДЦ
-                if (card.getLpu() == 108 || card.getLpu() == 219) {
-                    // 2021-04-08 разрешено подавать направленных из РЭЦ, КП на некоторые медуслуги Эндоскопии
-                    boolean endoskUsl = AppConstants.endoskUsl.stream().anyMatch(s -> s.equals(card.getCode_usl().trim()));
-                    if (endoskUsl) {
-                        setLogs("DEBUG 2021-04-08 разрешено подавать направленных из РЭЦ, КП на некоторые медуслуги Эндоскопии: "
-                                + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp());
-                        setLogsInConsole("DEBUG 2021-04-08 разрешено подавать направленных из РЭЦ, КП на некоторые медуслуги Эндоскопии: "
-                                + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp());
-                    } else {
-                        card.setCorrect(false);
-                        card.setComment("Направленные от ЛПУ 108, 219 не подаются на оплату (за искл. некоторых медуслуг Эндоскопии)");
-                        setLogs("ИСКЛЮЧЕНИЕ ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Направленные от ЛПУ 108, 219 не подаются на оплату (за искл. некоторых медуслуг Эндоскопии)");
-                        setLogsInConsole("ИСКЛЮЧЕНИЕ ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Направленные от ЛПУ 108, 219 не подаются на оплату (за искл. некоторых медуслуг Эндоскопии)");
-                    }
                 }
 
                 //Если оно пустое, т.е. если не нашлось в таблице s_lpu записи, значит оно некорректное
@@ -506,66 +440,6 @@ public class CreateDiagnAsumFile {
             }
             //ПРОВЕРКА ВРАЧА. КОНЕЦ
 
-            //ПРОВЕРКА СВОЙСТВ НОВОРОЖДЕННОГО. НАЧАЛО
-            //Если не исключается из оплаты и это услуга новорожденного
-            if (card.isCorrect() && card.isNovor()) {
-                if (card.getFam_n() == null || card.getIm_n() == null || card.getFam_n().trim().length() == 0 || card.getIm_n().trim().length() == 0 || card.getDat_rojd_n() == null) {
-                    card.setCorrect(false);
-                    card.setComment("Для новорожденного указаны не все необходимые данные: фамилия, имя, дата рождения, пол");
-                    setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Для новорожденного указаны не все необходимые данные: фамилия, имя, дата рождения, пол");
-                    setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Для новорожденного указаны не все необходимые данные: фамилия, имя, дата рождения, пол");
-                } else { //Иначе, если поля указаны
-                    //long diffInMilles = DAYS.between(card.getDate_in(), card.getDat_rojd_n());
-                    //Вычисляем возраст новорожденного на дату обследования в днях
-                    long age_novor = Duration.between(card.getDat_rojd_n().atStartOfDay(), card.getDate_in().atStartOfDay()).toDays();
-                    //Если возраст больше 90 дней
-                    if (age_novor > 90) {
-                        card.setCorrect(false);
-                        card.setComment("Возраст новорожденного на момент выполнения обследования превышает 90 дней " + age_novor);
-                        setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Возраст новорожденного на момент выполнения обследования превышает 90 дней");
-                        setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Возраст новорожденного на момент выполнения обследования превышает 90 дней");
-                    } else {
-                        // Определить тип полиса, предъявленного за новорожденного
-                        int vpolis = determineVpolis(card.getSpolis().trim(), card.getNpolis().trim());
-                        //Если вычисленный тип полиса равен ошибочному
-                        if (vpolis == AppConstants.TYPE_POLIS_ERROR) {
-                            card.setCorrect(false);
-                            card.setComment("Не удалось определить тип предъявленного за новорожденного полиса " + card.getVpolis());
-                            setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                    + " Не удалось определить тип предъявленного за новорожденного полиса");
-                            setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                    + " Не удалось определить тип предъявленного за новорожденного полиса");
-                        } else {
-                            //Иначе устанавливаем тип полиса равный вычисленному
-                            card.setVpolis(vpolis);
-                        }
-                    }
-                }
-            }
-            //ПРОВЕРКА СВОЙСТВ НОВОРОЖДЕННОГО. КОНЕЦ
-
-            //ДОБАВЛЕНИЕ ПРИЗНАКА МУР. НАЧАЛО
-            if (!card.isInogor()) { //Если не иногородний
-
-                if (spTarifNewOptional.isPresent()) { //Если услуга есть в optional
-                    if (spTarifNewOptional.get().isMuvr()) { //Если она относится к МУР
-                        card.setMuvr(true); //тогда ставим МУР
-                    }
-
-                    if (!spTarifNewOptional.get().isMuvr()) { //Если она не МУР
-                        //Проверяем направившее МО (подразделение по mcod), если у нее idump != 3, то это тоже МУР, остальное все НЕ МУР
-                        if (slpuOptional.isPresent() && slpuOptional.get().getIdump() != 3) {
-                            card.setMuvr(true); //тогда ставим МУР
-                        }
-                    }
-                }
-            }
-            //ДОБАВЛЕНИЕ ПРИЗНАКА МУР. КОНЕЦ
-
             //Если услуга корректная
             if (card.isCorrect()) {
                 //Если установлена галочка chkPredUslDate. Нужна только для предварительных файлов
@@ -586,51 +460,50 @@ public class CreateDiagnAsumFile {
             }
 
         }
-        setLogs("Конец проверки корректности диагностических услуг.");
-        setLogsInConsole("Конец проверки корректности диагностических услуг.");
+        setLogs("Конец проверки корректности стоматологических услуг.");
+        setLogsInConsole("Конец проверки корректности стоматологических услуг.");
+
         //ПРОВЕРКА НАЛИЧИЯ ИССЛЕДОВАНИЙ С ТАКИМ ЖЕ КОДОМ МЕДУСЛУГИ НА ТАКОГО ПАЦИЕНТА В ЭТОТ ДЕНЬ. НАЧАЛО
         //ДЕЛАЕМ В ОТДЕЛЬНОМ ЦИКЛЕ
         setLogs("Проверка наличия у одного пациента одинаковых услуг в один день. Начало");
         setLogsInConsole("Проверка наличия у одного пациента одинаковых услуг в один день. Начало");
-        //Сортируем коллекцию allCardsListDiagn перед началом проверки по snPol, фамилии, имени и отчеству, дате обследования
+        //Сортируем коллекцию allCardsListStom перед началом проверки по snPol, фамилии, имени и отчеству, дате обследования
         //Перенес сортировку по коду услуги выше т.к. были случаи когда на два пациента один полис и все их услуги не отсекались при дублировании
-        allCardsListDiagnDiagn.sort(Comparator.comparing(Cards::getSnPol)
+        allCardsListStom.sort(Comparator.comparing(Cards::getSnPol)
                 .thenComparing(Cards::getCode_usl)
                 .thenComparing(Cards::getDate_in)
                 .thenComparing(Cards::getFam)
                 .thenComparing(Cards::getIm)
-                .thenComparing(Cards::getOt)
-                .thenComparing(Cards::is_onkl));
+                .thenComparing(Cards::getOt));
 
         //Проходимся по все отсортированной коллекции
-        for (int i = 0; i < allCardsListDiagnDiagn.size(); i++) {
+        for (int i = 0; i < allCardsListStom.size(); i++) {
             //Если услуга ранее попала в список разрешенных на оплату
-            if (allCardsListDiagnDiagn.get(i).isCorrect()) {
+            if (allCardsListStom.get(i).isCorrect()) {
                 //Получаем Optional для sp_tarif_extended для проверяемой услуги
-                Optional<SpTarifExtended> spTarifExtendedOptional = spTarifExtendedService.findByKsg(allCardsListDiagnDiagn.get(i).getCode_usl());
+                Optional<SpTarifExtended> spTarifExtendedOptional = spTarifExtendedService.findByKsg(allCardsListStom.get(i).getCode_usl());
 
                 //Если услуга вернулась в optional и может быть оказана несколько раз (т.е. для нее есть кратность)
                 if (spTarifExtendedOptional.isPresent() && spTarifExtendedOptional.get().getKr_mul() == 1) {
                     //Получаем текущую услугу
-                    Cards current = allCardsListDiagnDiagn.get(i);
+                    Cards current = allCardsListStom.get(i);
                     //Получаем LocalDate для текущей услуги
                     LocalDate currentCardsDate = current.getDate_in();
                     //Первая полученная, текущая услуга будет true
                     current.setCorrect(true);
                     //Пока закомментируем current.setKol_usl(1); т.к. всегда бывает 1
                     //current.setKol_usl(1);
-                    //Второй цикл начинается уже со следующего элемента коллекции allCardsListDiagn
-                    for (int j = i + 1; j < allCardsListDiagnDiagn.size(); j++) {
+                    //Второй цикл начинается уже со следующего элемента коллекции allCardsListStom
+                    for (int j = i + 1; j < allCardsListStom.size(); j++) {
                         //Получаем следующий элемент
-                        Cards next = allCardsListDiagnDiagn.get(j);
+                        Cards next = allCardsListStom.get(j);
                         //Получаем LocalDate для следующей услуги
                         LocalDate nextCardsDate = next.getDate_in();
                         //Если полис, фио и дата услуги, код услуги следующего пациента не совпадает с текущим, значит данные не относятся к текущему и прерываем цикл
                         //Отдельно по новорожденным условия не нужно ставить, т.к. условие ниже учитывает услуги матери и новорожденного и корректно отработает
-                        //Добавляем проверку по is_onkl чтобы услуга не отсекалась, если она была у пациента с кодом онко и без. Т.е. в оба случая попала услуга
                         if (!next.getSnPol().equals(current.getSnPol()) || !next.getFam_n().equals(current.getFam_n()) || !next.isNovor() == current.isNovor() ||
                                 !next.getIm_n().equals(current.getIm_n()) || !next.getOt_n().equals(current.getOt_n()) || !nextCardsDate.equals(currentCardsDate) ||
-                                !next.getCode_usl().equals(current.getCode_usl()) || !next.is_onkl() == current.is_onkl() || !next.isMuvr() == current.isMuvr()) {
+                                !next.getCode_usl().equals(current.getCode_usl())) {
                             break;
                         }
                         //У текущей услуги увеличиваем количество услуг на 1...
@@ -651,28 +524,23 @@ public class CreateDiagnAsumFile {
                 } else {
                     //Если вернулась услуга и kr_mil = 0, т.е. нельзя подавать несколько раз
                     if (spTarifExtendedOptional.isPresent() && spTarifExtendedOptional.get().getKr_mul() == 0) {
-                        System.out.println(allCardsListDiagnDiagn.get(i) + " current");
                         //Получаем текущую услугу
-                        Cards current = allCardsListDiagnDiagn.get(i);
+                        Cards current = allCardsListStom.get(i);
                         //Получаем LocalDate для текущей услуги
                         LocalDate currentCardsDate = current.getDate_in();
                         //Первая полученная, текущая услуга будет true
                         current.setCorrect(true);
-                        //Второй цикл начинается уже со следующего элемента коллекции allCardsListDiagn
-                        for (int j = i + 1; j < allCardsListDiagnDiagn.size(); j++) {
+                        //Второй цикл начинается уже со следующего элемента коллекции allCardsListStom
+                        for (int j = i + 1; j < allCardsListStom.size(); j++) {
                             //Получаем следующий элемент
-                            Cards next = allCardsListDiagnDiagn.get(j);
+                            Cards next = allCardsListStom.get(j);
                             //Получаем LocalDate для следующей услуги
                             LocalDate nextCardsDate = next.getDate_in();
                             //Если полис, фио и дата услуги, код услуги следующего пациента не совпадает с текущим, значит данные не относятся к текущему и прерываем цикл
                             //Отдельно по новорожденным условия не нужно ставить, т.к. условие ниже учитывает услуги матери и новорожденного и корректно отработает
-                            //Добавляем проверку по is_onkl чтобы услуга не отсекалась, если она была у пациента с кодом онко и без. Т.е. в оба случая попала услуга
-                            //Также добавил сравнение muvr
-                            //05.02.2024, исключил из проверки ковид (56924), чтобы она в любом случае отсекалась если в день была оказана > 1 раза независимо от МУР или объемов
                             if (!next.getSnPol().equals(current.getSnPol()) || !next.getFam_n().equals(current.getFam_n()) || !next.isNovor() == current.isNovor() ||
                                     !next.getIm_n().equals(current.getIm_n()) || !next.getOt_n().equals(current.getOt_n()) || !nextCardsDate.equals(currentCardsDate) ||
-                                    !next.getCode_usl().equals(current.getCode_usl()) || !next.is_onkl() == current.is_onkl() || !next.isMuvr() == current.isMuvr()
-                                    && !current.getCode_usl().equals("56924")) {
+                                    !next.getCode_usl().equals(current.getCode_usl())) {
                                 break;
                             }
                             //Следующий исключаем из оплаты
@@ -690,184 +558,79 @@ public class CreateDiagnAsumFile {
         setLogsInConsole("Проверка наличия у одного пациента одинаковых услуг в один день. Конец");
         //ПРОВЕРКА НАЛИЧИЯ ИССЛЕДОВАНИЙ С ТАКИМ ЖЕ КОДОМ МЕДУСЛУГИ НА ТАКОГО ПАЦИЕНТА В ЭТОТ ДЕНЬ. КОНЕЦ
 
-        //Сохраняем коллекцию allCardsListDiagn в БД
-        cardsService.saveAllCards(allCardsListDiagnDiagn);
+        //Сохраняем коллекцию allCardsListStom в БД
+        cardsService.saveAllCards(allCardsListStom);
     }
-
-    //Определяем тип полиса по серии и номеру полиса
-    private int determineVpolis(String sPolis, String nPolis) {
-        if (sPolis.trim().length() > 0 && nPolis.trim().length() == 9) {
-            return AppConstants.TYPE_POLIS_OLD;
-        } else {
-            if (sPolis.trim().length() == 0 && nPolis.trim().length() == 9) {
-                return AppConstants.TYPE_POLIS_VREMEN;
-            } else {
-                if (sPolis.trim().length() == 0 && nPolis.trim().length() == 16) {
-                    return AppConstants.TYPE_POLIS_ENP;
-                } else {
-                    return AppConstants.TYPE_POLIS_ERROR;
-                }
-            }
-        }
-    }
-
-    //УПАКОВКА УСЛУГ В СЛУЧАИ. НАЧАЛО
-    //Создаем record-класс, который будет выступать в качестве ключа для упаковки услуг по полям в конструкторе. Record - новая функциональность в Java 16
-    /*record KeyForBoxing(String snpol, String lpu_shnm, int prvs, int t_type, boolean is_onkl) {
+    record KeyForBoxing(long visitid) {
         public KeyForBoxing(Cards cards) {
-            this(cards.getSnPol(), cards.getLpu_shnm(), cards.getPrvs(), cards.getT_type(), cards.isIs_onkl());
+            this(cards.getVisitid());
         }
-    }*/
-
-    //Пробуем разделять по muvr, вместо t_type
-    //Для объединения диагностических услуг по полям в конструкторе String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl
-    //Ранее по ошибке группировал по prvs вместо profil
-    //Добавил 13.04.2023 также разбивку по полям fam_n, im_n, ot_n, чтобы для новорожденных также формировались случаи. Но такого на практике не было
-    //Добавил 14.07.2023 разбивку по полю inogor, чтобы случаи пациента делились по этому признаку. т.к. с 07.2023 изменился способ оплаты idsp, чтобы корректной проставновки его и реализации признака muvr из программы
-    //Добавил 03.10.2023 разбивку также по полю usl_idsp, т.к. с 09.2023 ТФОМС ввел проверку на соответствие услуги способу оплаты
-    //Добавил 11.12.2023 разбивку по visitid, чтобы в выгрузку попадали случаи так же как в МИС Ариадна (возможно лаб. услуги будут дробиться больше)
-    record KeyForBoxing(String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl, boolean inogor, int usl_idsp, long visitid) {
-        public KeyForBoxing(Cards cards) {
-            this(cards.getSnPol(), cards.getLpu_shnm(), cards.getProfil(), cards.isMuvr(), cards.is_onkl(), cards.isInogor(), cards.getUsl_idsp(), cards.getVisitid());
-        }
-    }
-
-    //Метод группирует список диагностических услуг Cards по датам в зависимости от того входит или нет услугу в интервал в days дней
-    public Map<LocalDate, List<Cards>> groupCardsDiagnByDays(List<Cards> items, int days) {
-        //Сортирует коллекцию по полю date_in
-        items.sort(Comparator.comparing(Cards::getDate_in));
-
-        //Предыдущее решение, тоже актулаьное
-        /*//Получаем услугу и минимальной датой
-        Cards min = items.get(0);
-
-        //Создаем новую Map, где ключ минимальная дата из группы, а значение список сгруппированных услуг
-        Map<LocalDate, List<Cards>> groups = new LinkedHashMap<>();
-        //Проходимся по коллекции items
-        for (Cards i : items) {
-            //Если разница в днях между услугой с минимальной датой и текущей меньше чем days
-            if (ChronoUnit.DAYS.between(min.getDate_in(), i.getDate_in()) < days) {
-                //То в map добавляем новый элемент по ключу с минимальной датой и услугой
-                groups.computeIfAbsent(min.getDate_in(), k -> new ArrayList<>()).add(i);
-            } else {
-                //Иначе услуга с минимальной датой = i
-                min = i;
-                //И ее добавляем в Map
-                groups.computeIfAbsent(min.getDate_in(), k -> new ArrayList<>()).add(i);
-            }
-            //ЛИБО ТАК СОКРАЩЕННО
-            //min = ChronoUnit.DAYS.between(min.getDate_in(), i.getDate_in()) < days ? min : i;
-            //groups.computeIfAbsent(min.getDate_in(), k -> new ArrayList<>()).add(i);
-        }*/
-
-        //Для вывода в консоль
-        /*for (Map.Entry<LocalDate, List<Cards>> entry : groups.entrySet()) {
-            System.out.println(entry.getKey());
-            for (Cards card : entry.getValue()) {
-                System.out.println(card + " \n");
-            }
-        }*/
-        //return groups;
-
-        //Последнее решение, актуальное
-        LocalDate[] keyDate = {items.get(0).getDate_in()};
-        return items.stream()
-                .collect(Collectors.groupingBy(
-                        i -> keyDate[0] = DAYS.between(keyDate[0], i.getDate_in()) < days ? keyDate[0] : i.getDate_in(),
-                        LinkedHashMap::new,
-                        Collectors.toList()
-                ));
     }
 
     //Метод упаковывает услуги пациента в разные случаи по входящему ключу-классу KeyForBoxing
-    public Map<KeyForBoxing, List<Cards>> groupingUslInSluch(List<Cards> cardsList) {
-        setLogs("Начало упаковки диагностических услуг в группы");
-        setLogsInConsole("Начало упаковки диагностических услуг в группы");
+    public Map<CreateStomAsumFile.KeyForBoxing, List<Cards>> groupingUslInSluch(List<Cards> cardsList) {
+        setLogs("Начало упаковки стоматологических услуг в группы");
+        setLogsInConsole("Начало упаковки стоматологических услуг в группы");
         //Создаем новую Map
-        Map<KeyForBoxing, List<Cards>> map = new LinkedHashMap<>();
+        Map<CreateStomAsumFile.KeyForBoxing, List<Cards>> map = new LinkedHashMap<>();
 
         //Проходимся по коллекции cardsList используя for-each
         //computeIfAbsent метод при необходимости создаёт новое или возвращает существующее значение-список, для которого можно сразу же вызвать метод List:add
         cardsList.forEach(cards -> map
-                .computeIfAbsent(new KeyForBoxing(cards)
+                .computeIfAbsent(new CreateStomAsumFile.KeyForBoxing(cards)
                         , keyForBoxing -> new ArrayList<>())
                 .add(cards));
 
-        setLogs("Конец упаковки диагностических услуг в группы");
-        setLogsInConsole("Конец упаковки диагностических услуг в группы");
+        setLogs("Конец упаковки стоматологических услуг в группы");
+        setLogsInConsole("Конец упаковки стоматологических услуг в группы");
+
         //Возвращаем map
         return map;
     }
 
     //Возвращаем коллекцию случаев с упакованными услугами, на основании входного ключа-класса
     public List<Sluch> getSluchList() {
-        setLogs("Начало упаковки диагностических услуг в случаи");
-        setLogsInConsole("Начало диагностических упаковки услуг в случаи");
-        //Выбираем из БД только те услуги, для которых в поле correct стоит true. Т.е. разрешенные для оплаты
-        //List<Cards> cardsList = cardsService.getCardsDiagnList().stream().filter(Cards::isCorrect).toList();
-        //Выбираем только диагностические услуги
-        List<Cards> cardsList = cardsService.getCardsDiagnList();
+        setLogs("Начало упаковки стоматологических услуг в случаи");
+        setLogsInConsole("Начало стоматологических упаковки услуг в случаи");
 
-        //При получении списка случаев заодно и создаем set с уникальными врачами
-        //vrachiList = getVrachiList(cardsDiagnList);
+        //Выбираем только диагностические услуги
+        List<Cards> cardsList = cardsService.getCardsKpStomList();
 
         //Вызываем метод для упаковки услуг по ключу и записываем их коллекцию map
-        Map<KeyForBoxing, List<Cards>> map = groupingUslInSluch(cardsList);
+        Map<CreateStomAsumFile.KeyForBoxing, List<Cards>> map = groupingUslInSluch(cardsList);
 
         //Создаем коллекцию для случаев, куда будем добавлять все случаи всех пациентов.
         List<Sluch> sluchList = new ArrayList<>();
 
         //Проходимся по ключам Map
-        for (Map.Entry<KeyForBoxing, List<Cards>> entry : map.entrySet()) {
-            //Для каждого внешнего ключа KeyForBoxing берем его значение (т.е. List<Cards>) и помещаем его в Map<LocalDate, List<Cards>>
-            //Таким образом делим List<Cards> для каждого ключа KeyForBoxing на группы по датам в промежутке 14 дней
-            //Тут уже несколько групп услуг разделенных на группы в пределах 14 дней
-            Map<LocalDate, List<Cards>> localDateListMap = groupCardsDiagnByDays(entry.getValue(), 14);
+        for (Map.Entry<CreateStomAsumFile.KeyForBoxing, List<Cards>> entry : map.entrySet()) {
 
-            //Далее проходимся по каждому значению
-            for (Map.Entry<LocalDate, List<Cards>> dateListEntry : localDateListMap.entrySet()) {
+            //Создаем коллекцию для хранения услуг
+            List<Usl> uslList = new ArrayList<>();
+            //Проходимся по значениям Map по ключу
+            for (Cards cards : entry.getValue()) {
+                //Создаем услугу
+                Usl usl = CreateAsumElements.createUsl(cards);
+                //Устанавливаем для usl соответствующую cards, чтобы при создании случая из cards брать всю информацию, т.к. в usl нет всех данных
+                usl.setCards(cards);
+                //Добавляем услугу в список услуг
+                uslList.add(usl);
 
-                //Создаем коллекцию для хранения услуг
-                List<Usl> uslList = new ArrayList<>();
-                //Проходимся по значениям Map по ключу
-                for (Cards cards : dateListEntry.getValue()) {
-                    //Создаем услугу
-                    Usl usl = CreateAsumElements.createUsl(cards);
-                    //Устанавливаем для usl соответствующую cards, чтобы при создании случая из cards брать всю информацию, т.к. в usl нет всех данных
-                    usl.setCards(cards);
-                    //Добавляем услугу в список услуг
-                    uslList.add(usl);
-
-                    //При каждом добавлении услуги, добавляем также врача в мапу vrachiMap (хранит уникальных врачей)
-                    vrachiMap.put(cards.getCode_md(), getVrach(cards));
-                }
-
-                //Создаем новый случай, подавая на вход коллекцию из Cards
-                Sluch sluch = CreateAsumElements.createSluch(uslList);
-
-                //Добавляем список услуг в случай
-                sluch.setUslList(uslList);
-                //Добавляем случай в список случаев
-                sluchList.add(sluch);
-
-                //System.out.println(dateListEntry.getValue());
+                //При каждом добавлении услуги, добавляем также врача в мапу vrachiMap (хранит уникальных врачей)
+                vrachiMap.put(cards.getCode_md(), getVrach(cards));
             }
 
-            //Для логов, чтобы выводить случай и его услуги
-                /*try (FileWriter writer = new FileWriter("C:\\tmp\\log3.txt", false)) {
-                    for (Sluch sl : sluchList) {
-                        writer.write("SLUCH: " + sl.toString() + "\n");
-                        for (Usl usl : sl.getUslList()) {
-                            writer.write("      USL: " + usl.toString() + "\n");
-                        }
-                    }
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }*/
+            //Создаем новый случай, подавая на вход коллекцию из Cards
+            Sluch sluch = CreateAsumElements.createSluch(uslList);
+
+            //Добавляем список услуг в случай
+            sluch.setUslList(uslList);
+            //Добавляем случай в список случаев
+            sluchList.add(sluch);
         }
 
-        setLogs("Конец упаковки диагностических услуг в случаи");
-        setLogsInConsole("Конец диагностических упаковки услуг в случаи");
+        setLogs("Конец упаковки стоматологических услуг в случаи");
+        setLogsInConsole("Конец стоматологических упаковки услуг в случаи");
         //Возвращаем коллекцию случаев sluchList
         return sluchList;
     }
@@ -882,45 +645,45 @@ public class CreateDiagnAsumFile {
     }
 
     //Метод упаковывает случаи пациентов в разные ZAP по входящему ключу-классу ZapBoxing
-    public Map<ZapBoxing, List<Sluch>> groupingSluchInZap(List<Sluch> sluchList) {
-        setLogs("Начало упаковки диагностических случаев в группы для zap");
-        setLogsInConsole("Начало упаковки диагностических случаев в группы для zap");
+    public Map<CreateStomAsumFile.ZapBoxing, List<Sluch>> groupingSluchInZap(List<Sluch> sluchList) {
+        setLogs("Начало упаковки стоматологических случаев в группы для zap");
+        setLogsInConsole("Начало упаковки стоматологических случаев в группы для zap");
 
-        setLogs("Кол-во случаев по диагностике: " + sluchList.size());
-        setLogsInConsole("Кол-во случаев по диагностике: " + sluchList.size());
+        setLogs("Кол-во случаев по стоматологии: " + sluchList.size());
+        setLogsInConsole("Кол-во случаев по стоматологии: " + sluchList.size());
 
-        setSluchCounterRdc(sluchList.size());
+        setSluchCounterStom(sluchList.size());
 
         //Создаем новую Map
-        Map<ZapBoxing, List<Sluch>> map = new LinkedHashMap<>();
+        Map<CreateStomAsumFile.ZapBoxing, List<Sluch>> map = new LinkedHashMap<>();
 
         //Проходимся по коллекции sluchList используя for-each
         //computeIfAbsent метод при необходимости создаёт новое или возвращает существующее значение-список, для которого можно сразу же вызвать метод List:add
         sluchList.forEach(sluch -> map
-                .computeIfAbsent(new ZapBoxing(sluch), zapBoxing -> new ArrayList<>())
+                .computeIfAbsent(new CreateStomAsumFile.ZapBoxing(sluch), zapBoxing -> new ArrayList<>())
                 .add(sluch));
 
-        setLogs("Конец упаковки диагностических случаев в группы для zap");
-        setLogsInConsole("Конец упаковки диагностических случаев в группы для zap");
+        setLogs("Конец упаковки стоматологических случаев в группы для zap");
+        setLogsInConsole("Конец упаковки стоматологических случаев в группы для zap");
         //Возвращаем map
         return map;
     }
 
     //Возвращаем коллекцию случаев с упакованными услугами, на основании входного ключа-класса
     public List<Zap> getZapList() {
-        setLogs("Начало упаковки диагностических случаев в zap");
-        setLogsInConsole("Начало упаковки диагностических случаев в zap");
+        setLogs("Начало упаковки стоматологических случаев в zap");
+        setLogsInConsole("Начало упаковки стоматологических случаев в zap");
         //Заполняем коллекцию sluchList случаями используя метод getSluchList()
         List<Sluch> sluchList = getSluchList();
 
         //Вызываем метод для упаковки услуг по ключу и записываем их коллекцию map
-        Map<ZapBoxing, List<Sluch>> map = groupingSluchInZap(sluchList);
+        Map<CreateStomAsumFile.ZapBoxing, List<Sluch>> map = groupingSluchInZap(sluchList);
 
         //Создаем коллекцию Zap
         List<Zap> zapList = new ArrayList<>();
 
         //Проходимся по ключам Map
-        for (Map.Entry<ZapBoxing, List<Sluch>> entry : map.entrySet()) {
+        for (Map.Entry<CreateStomAsumFile.ZapBoxing, List<Sluch>> entry : map.entrySet()) {
             //Создаем новый ZAP, подавая на вход коллекцию из Sluch
             Zap zap = new Zap();
 
@@ -934,85 +697,50 @@ public class CreateDiagnAsumFile {
 
             //Добавляем zap в список ZAPов
             zapList.add(zap);
-
-            //Для логов, чтобы выводить zap и его услуги
-            /*try (FileWriter writer = new FileWriter("C:\\tmp\\log4.txt", false)) {
-                for (Zap z : zapList) {
-                    writer.write("ZAP: " + z.toString() + "\n");
-                    for (Sluch sluch : z.getSluchList()) {
-                        writer.write("\tSLUCH: " + sluch.toString() + "\n");
-                        for (Usl usl : sluch.getUslList()) {
-                            writer.write("\t\tUSL: " + usl.toString() + "\n");
-                            writer.write("\t\t\tMR_USL_N: " + usl.getMrUslN().toString() + "\n");
-                        }
-                    }
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }*/
         }
 
-        setLogs("Конец упаковки диагностических случаев в zap");
-        setLogsInConsole("Конец упаковки диагностических случаев в zap");
+        setLogs("Конец упаковки стоматологических случаев в zap");
+        setLogsInConsole("Конец упаковки стоматологических случаев в zap");
         //Возвращаем коллекцию случаев zapList
         return zapList;
     }
     //УПАКОВКА СЛУЧАЕВ в ZAP. КОНЕЦ
 
     //Создание сегментов и узлов для ASUM файла. НАЧАЛО
-    public void createDiagnAsumFile(List<Zap> zapList) {
-        setLogs("Начало создания ASUM файла по диагностике");
-        setLogsInConsole("Начало создания ASUM файла по диагностике");
+    public void createStomAsumFile(List<Zap> zapList) {
+        setLogs("Начало создания ASUM файла по стоматологии");
+        setLogsInConsole("Начало создания ASUM файла по стоматологии");
 
         File dir = new File(AppConstants.asumFilePath);
         if (!dir.exists()) {
             dir.mkdirs();
         }
 
-        try (FileOutputStream out = new FileOutputStream(AppConstants.asumFilePath + AppConstants.ASUM_FILE_NAME_RDC + yearMonth + ".xml");
+        try (FileOutputStream out = new FileOutputStream(AppConstants.asumFilePath + AppConstants.ASUM_FILE_NAME_STOM + yearMonth + ".xml");
              BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(out)) {
             writeXML(bufferedOutputStream, zapList);
         } catch (XMLStreamException | IOException e) {
-            //throw new RuntimeException(e);
             Platform.runLater(() -> {
                 mainController.getLogs().appendText(e.toString());
             });
         }
 
-        //Для красивой печати
-        /*try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            //FileOutputStream out = new FileOutputStream("C:\\tmp\\text.xml");
-            writeXML(out, zapList);
-
-            String xml = new String(out.toByteArray(), StandardCharsets.UTF_8);
-
-            String prettyPrintXML = formatXML(xml);
-
-            Files.writeString(Paths.get("C:\\tmp\\text.xml"), prettyPrintXML, StandardCharsets.UTF_8);
-        } catch (XMLStreamException | TransformerException | IOException e) {
-            throw new RuntimeException(e);
-        }*/
-
-        setLogs("Конец создания ASUM файла по диагностике");
-        setLogsInConsole("Конец создания ASUM файла по диагностике");
+        setLogs("Конец создания ASUM файла по стоматологии");
+        setLogsInConsole("Конец создания ASUM файла по стоматологии");
     }
 
     //Записываем данные в XML
     private void writeXML(BufferedOutputStream outputStream, List<Zap> zapList) throws XMLStreamException {
         XMLOutputFactory factory = XMLOutputFactory.newInstance();
-        //XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream, "UTF-8");
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         XMLStreamWriter writer = factory.createXMLStreamWriter(byteArrayOutputStream, "UTF-8");
-
-        //XMLStreamWriter writer = factory.createXMLStreamWriter(outputStream, "UTF-8");
 
         writer.writeStartDocument("utf-8", "1.0");
 
         writer.writeStartElement("zl_list");
 
-        Zglv zglv = new Zglv("1", "AAAAAAAA", "1.14", UtilDate.getCurrentDate(), AppConstants.ASUM_FILE_NAME_RDC + yearMonth);
+        Zglv zglv = new Zglv("1", "AAAAAAAA", "1.14", UtilDate.getCurrentDate(), AppConstants.ASUM_FILE_NAME_STOM + yearMonth);
         WriteAsumXmlSegments.writeZglv(writer, zglv);
 
         //Записываем ZAPы
@@ -1056,7 +784,7 @@ public class CreateDiagnAsumFile {
         Vrachi vrachi = new Vrachi();
         vrachi.setKod(cards.getCode_md() + "");
         vrachi.setFio(cards.getVr_fio());
-        vrachi.setMcod(AppConstants.TFOMS_CODE_RDC);
+        vrachi.setMcod(AppConstants.TFOMS_CODE_KPSTOM);
 
         Optional<Medspec> medspecOptional = medspecService.findByIdmsp(cards.getPrvs() + "");
 
@@ -1068,5 +796,4 @@ public class CreateDiagnAsumFile {
 
         return vrachi;
     }
-
 }

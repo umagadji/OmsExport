@@ -83,7 +83,7 @@ public class Cards implements Comparable<Cards> {
     @Column
     private String cab_name;
     @Column
-    private String met_pr_kod;
+    private String metPrKod;
     @Column
     private int n_met;
     @Column

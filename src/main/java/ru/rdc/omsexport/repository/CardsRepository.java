@@ -13,10 +13,12 @@ import java.util.List;
 public interface CardsRepository extends JpaRepository<Cards, Integer> {
     List<Cards> findAllByOtdInAndCorrect(List<Integer> list, boolean correct);
 
+    List<Cards> findAllByOtdInAndCorrectAndMetPrKod(List<Integer> list, boolean correct, String met_pr_kod);
+
     //Для получения всех услуг ошибочных или нет.
     List<Cards> findAllByCorrect(boolean correct);
 
-    //Можно писать такие запросы, предварительно создав итоговый объектс полями, которыми хотим получить в запросе
+    //Можно писать такие запросы, предварительно создав итоговый объект с полями, которыми хотим получить в запросе
     @Query("select new ru.rdc.omsexport.cards_model.CommentCountsDTO(c.comment, count(c)) from Cards c where c.comment is not null group by c.comment")
     List<CommentCountsDTO> getCommentCounts();
 }
