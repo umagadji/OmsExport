@@ -261,7 +261,6 @@ public class CreateStomAsumFile {
             //Если раздел прейскуранта не стоматология
             if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_STOMATOLOGY)) {
                 card.setCorrect(false);
-                allCardsListStom.remove(card);
                 card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl() + " - СТОМАТОЛОГИЯ");
                 setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                         + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " - СТОМАТОЛОГИЯ");
