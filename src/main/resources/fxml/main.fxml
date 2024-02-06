@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rdc.omsexport.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rdc.omsexport.controllers.MainController">
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -91,52 +91,95 @@
                   </VBox>
                   <HBox alignment="CENTER">
                      <children>
-                        <CheckBox fx:id="chkAll" mnemonicParsing="false" onAction="#onAllSelected" selected="true" text="Все" />
-                        <CheckBox fx:id="chk1" mnemonicParsing="false" selected="true" text="ОФД">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk2" mnemonicParsing="false" selected="true" text="Эндоскопия">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk3" mnemonicParsing="false" selected="true" text="УЗИ">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk4" mnemonicParsing="false" selected="true" text="Рентген">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk5" mnemonicParsing="false" selected="true" text="Лаборатория">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk6" mnemonicParsing="false" selected="true" text="РЭЦ">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk7" mnemonicParsing="false" selected="true" text="КП">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chk7stom" layoutX="594.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="Стоматология">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
-                        <CheckBox fx:id="chkStac" mnemonicParsing="false" selected="true" text="Стационары">
-                           <padding>
-                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                           </padding>
-                        </CheckBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chkAll" mnemonicParsing="false" onAction="#onAllSelected" selected="true" style="-fx-background-color: #ff00b714;" text="Все">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chk1" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ff9514;" text="ОФД">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="chk2" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ff9514;" text="Эндоскопия">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="chk3" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ff9514;" text="УЗИ">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="chk4" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ff9514;" text="Рентген">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                              <CheckBox fx:id="chk5" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ff9514;" text="Лаборатория">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chk6" mnemonicParsing="false" selected="true" style="-fx-background-color: #fbff0014;" text="РЭЦ">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chk7" mnemonicParsing="false" selected="true" style="-fx-background-color: #ff3b0014;" text="КП">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chkStac" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ffd014;" text="Стационары">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                           <HBox.margin>
+                              <Insets right="5.0" />
+                           </HBox.margin>
+                        </HBox>
+                        <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
+                           <children>
+                              <CheckBox fx:id="chk7stom" mnemonicParsing="false" selected="true" style="-fx-background-color: #9d00ff14;" text="Стоматология">
+                                 <padding>
+                                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                 </padding>
+                              </CheckBox>
+                           </children>
+                        </HBox>
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -213,7 +256,7 @@
                      <children>
                         <HBox HBox.hgrow="ALWAYS">
                            <children>
-                              <HBox style="-fx-background-color: #E6FBFF;">
+                              <HBox style="-fx-background-color: #00ff9514; -fx-border-radius: 5px; -fx-border-color: #00000045;">
                                  <children>
                                     <Label fx:id="counterRdc" text="РДЦ:">
                                        <HBox.margin>
@@ -229,7 +272,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <HBox style="-fx-background-color: #E6FBFF;">
+                              <HBox style="-fx-background-color: #fbff0014; -fx-border-radius: 5px; -fx-border-color: #00000045;">
                                  <children>
                                     <Label fx:id="counterRec" text="РЭЦ:">
                                        <HBox.margin>
@@ -245,7 +288,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <HBox style="-fx-background-color: #E6FBFF;">
+                              <HBox style="-fx-background-color: #ff3b0014; -fx-border-radius: 5px; -fx-border-color: #00000045;">
                                  <children>
                                     <Label fx:id="counterKp" text="КП:">
                                        <HBox.margin>
@@ -261,7 +304,22 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <HBox layoutX="113.0" layoutY="10.0" style="-fx-background-color: #E6FBFF;">
+                              <HBox style="-fx-background-color: #00ffd014; -fx-border-radius: 5px; -fx-border-color: #00000045;">
+                                 <children>
+                                    <Label fx:id="counterDs" text="ДС:">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                              <HBox layoutX="113.0" layoutY="10.0" style="-fx-background-color: #9d00ff14; -fx-border-radius: 5px; -fx-border-color: #00000045;">
                                  <children>
                                     <Label fx:id="counterKpStom" text="СТОМ:">
                                        <HBox.margin>
@@ -274,23 +332,8 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                                  <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                              </HBox>
-                              <HBox style="-fx-background-color: #E6FBFF;">
-                                 <children>
-                                    <Label fx:id="counterDs" text="ДС:">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </Label>
-                                 </children>
-                                 <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
                               </HBox>
                            </children>
                            <opaqueInsets>

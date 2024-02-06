@@ -292,11 +292,11 @@ public class CreateKpAsumFile {
                 if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
                         !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR)) {
                     card.setCorrect(false);
-                    card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl());
+                    card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl() + " - ПОЛИКЛИНИКА");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
+                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " - ПОЛИКЛИНИКА");
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod());
+                            + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " - ПОЛИКЛИНИКА");
                 } else {
                     //Если раздел прейскуранта правильный, но длина услуги равна 0
                     if (card.getCode_usl().trim().length() == 0) {
