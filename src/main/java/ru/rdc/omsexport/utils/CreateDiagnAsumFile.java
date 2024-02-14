@@ -179,98 +179,8 @@ public class CreateDiagnAsumFile {
             card.setMcod(AppConstants.TFOMS_CODE_RDC);
 
             //ПРОВЕРКИ ИЗ EXCEL. НАЧАЛО
-            //Если для пациента указано в отчестве БО, Б-О, Б.О.
-            if (card.getOt().equals("БО") || card.getOt().equals("Б-О") || card.getOt().equals("Б.О.")) {
-                card.setOt("");
-            }
-
-            //Если тип полиса пациента 5 и он единого образца
-            if (card.getVpolis() == 5 && card.getNpolis().trim().length() == 16) {
-                card.setVpolis(3);
-            }
-
-            if (card.getVpolis() == 5 && card.getNpolis().trim().length() != 16) {
-                card.setVpolis(1);
-            }
-
-            //Если тип полиса пациента 6 и он единого образца
-            if (card.getVpolis() == 6 && card.getNpolis().trim().length() == 16) {
-                card.setVpolis(3);
-            }
-
-            //Если тип полиса пациента 4, он не новорожденный и полис единого образца
-            if (card.getVpolis() == 4 && !card.isNovor() && card.getNpolis().trim().length() == 16) {
-                card.setVpolis(3);
-            }
-
-            //Заменить тип полиса всем записям, где длина полиса = 16
-            if (card.getVpolis() == 0 && card.getNpolis().trim().length() == 16) {
-                card.setVpolis(3);
-            }
-
-            //Заменить тип полиса всем записям, где длина полиса = 9
-            if (card.getVpolis() == 0 && card.getSpolis().trim().length() == 0 && card.getNpolis().trim().length() == 9) {
-                card.setVpolis(2);
-            }
-
-            if (card.getVpolis() == 4 && card.getSpolis().trim().length() == 0 && card.getNpolis().trim().length() == 9) {
-                card.setVpolis(2);
-            }
-
-            if (card.isCorrect()) {
-                if (card.getAdres().trim().length() < 8) {
-                    card.setAdres("Дагестан Респ");
-                }
-            }
-
-            //Для всех полисов с типом 2 и 3, серию делаем пустым
-            if (card.getVpolis() == 2 || card.getVpolis() == 3) {
-                card.setSpolis("");
-            }
-
-            if (card.getLpu_shnm().trim().equals("~~~") || card.getLpu() == 0) {
-                card.setCorrect(false);
-                card.setComment("Исключается из оплаты: lpu_shnm = ~~~");
-            }
-
-            if (card.getProfil() != 15 && card.getProfil() != 34 && card.getProfil() != 67 && card.getMkb_code().trim().equals("Z01.7")) {
-                card.setMkb_code("Z03.8");
-            }
-
-            if (card.getProfil() != 15 && card.getProfil() != 34 && card.getProfil() != 67 && card.getMkb_code_p().trim().equals("Z01.7")) {
-                card.setMkb_code_p("Z03.8");
-            }
-
-            if (card.getNpolis().trim().equals("") || card.getNpolis() == null) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Номер полиса пустой");
-            }
-
-            if (card.getNpolis().trim().length() != 16 && card.getVpolis() == 3) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Неверный ЕНП");
-            }
-
-            if (card.getNpolis().trim().length() != 9 && (card.getVpolis() == 1 || card.getVpolis() == 2) && !card.isInogor()) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Врем. свид. или старый полис не равен 9 символам");
-            }
-
-            if (card.getVpolis() == 4 && card.getNpolis().trim().length() != 16) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Полис родителя неверной длины");
-            }
-
-            if (card.getVpolis() == 0 && card.getNpolis().trim().length() != 16) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Тип полиса пустой и/или неверная длина полиса");
-            }
-
-            if (card.getVpolis() == 0) {
-                card.setCorrect(false);
-                card.setComment("Ошибка полиса: Тип полиса пустой");
-            }
-
+            CardValidator.validateExcelCard(card);
+            CardValidator.validateMKBDiagnCards(card);
             //ПРОВЕРКИ ИЗ EXCEL. КОНЕЦ
 
             //Получаем optional из таблицы s_lpu по mcod. lpu_shnm - это mcod (подразделение, которое направило)
@@ -627,7 +537,7 @@ public class CreateDiagnAsumFile {
                         LocalDate nextCardsDate = next.getDate_in();
                         //Если полис, фио и дата услуги, код услуги следующего пациента не совпадает с текущим, значит данные не относятся к текущему и прерываем цикл
                         //Отдельно по новорожденным условия не нужно ставить, т.к. условие ниже учитывает услуги матери и новорожденного и корректно отработает
-                        //Добавляем проверку по is_onkl чтобы услуга не отсекалась, если она была у пациента с кодом онко и без. Т.е. в оба случая попала услуга
+                        //Добавляем проверку по is_onkl чтобы услуга не отсекалась, если она была у пациента с кодом онко и без. Т.е. чтобы в оба случая попала услуга
                         if (!next.getSnPol().equals(current.getSnPol()) || !next.getFam_n().equals(current.getFam_n()) || !next.isNovor() == current.isNovor() ||
                                 !next.getIm_n().equals(current.getIm_n()) || !next.getOt_n().equals(current.getOt_n()) || !nextCardsDate.equals(currentCardsDate) ||
                                 !next.getCode_usl().equals(current.getCode_usl()) || !next.is_onkl() == current.is_onkl() || !next.isMuvr() == current.isMuvr()) {
@@ -723,7 +633,7 @@ public class CreateDiagnAsumFile {
     //Для объединения диагностических услуг по полям в конструкторе String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl
     //Ранее по ошибке группировал по prvs вместо profil
     //Добавил 13.04.2023 также разбивку по полям fam_n, im_n, ot_n, чтобы для новорожденных также формировались случаи. Но такого на практике не было
-    //Добавил 14.07.2023 разбивку по полю inogor, чтобы случаи пациента делились по этому признаку. т.к. с 07.2023 изменился способ оплаты idsp, чтобы корректной проставновки его и реализации признака muvr из программы
+    //Добавил 14.07.2023 разбивку по полю inogor, чтобы случаи пациента делились по этому признаку. Т.к. с 07.2023 изменился способ оплаты idsp, чтобы корректной проставновки его и реализации признака muvr из программы
     //Добавил 03.10.2023 разбивку также по полю usl_idsp, т.к. с 09.2023 ТФОМС ввел проверку на соответствие услуги способу оплаты
     //Добавил 11.12.2023 разбивку по visitid, чтобы в выгрузку попадали случаи так же как в МИС Ариадна (возможно лаб. услуги будут дробиться больше)
     record KeyForBoxing(String snpol, String lpu_shnm, int profil, boolean muvr, boolean is_onkl, boolean inogor, int usl_idsp, long visitid) {
@@ -737,7 +647,7 @@ public class CreateDiagnAsumFile {
         //Сортирует коллекцию по полю date_in
         items.sort(Comparator.comparing(Cards::getDate_in));
 
-        //Предыдущее решение, тоже актулаьное
+        //Предыдущее решение, тоже актуальное
         /*//Получаем услугу и минимальной датой
         Cards min = items.get(0);
 

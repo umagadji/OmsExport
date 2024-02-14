@@ -291,8 +291,6 @@ public class CreateAsumElements {
         }
 
         sluch.setSmo(cardsList.get(0).getSmocod());
-        sluch.setNpr_mo(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getGlpu()); //Glpu из таблицы
-        sluch.setNpr_lpu(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getMcod()); //Короткое название из АРМ Контент
         sluch.setOrder(AppConstants.SLUSH_FOR_POM);
         sluch.setT_order("0");
         sluch.setPodr("");
@@ -416,7 +414,6 @@ public class CreateAsumElements {
         sluch.setNaz_v("0");
         sluch.setNaz_pmp("0");
         sluch.setNaz_pk("0");
-        sluch.setNpr_date(formatter.format(minDate));
         sluch.setTal_num("");
         sluch.setDs2_pr("0");
         sluch.setPr_ds2_n("0");
@@ -426,6 +423,15 @@ public class CreateAsumElements {
         sluch.setNapr_date("");
         sluch.setNapr_mo("");
         sluch.setDs_onk("0");
+
+        //Если Не стоматология, то указываем данные направившего МО
+        if (!cardsList.get(0).getMcod().equals("0501YD")) {
+            sluch.setNpr_mo(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getGlpu()); //Glpu из таблицы
+            sluch.setNpr_lpu(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getMcod()); //Короткое название из АРМ Контент
+            sluch.setNpr_date(formatter.format(minDate));
+            //в Npr_usl_ok ставим idump из mcod таблицы s_lpu
+            sluch.setNpr_usl_ok(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getIdump() + "");
+        }
 
         //Характер заболевания
         //Если характер заболевания не равен нулю
@@ -444,8 +450,6 @@ public class CreateAsumElements {
             sluch.setC_zab(AppConstants.ASUM_CHAR_ZAB_RANEE + "");
         }
 
-        //в Npr_usl_ok ставим idump из mcod таблицы s_lpu
-        sluch.setNpr_usl_ok(Objects.requireNonNull(slpuService.findSlpuByMcod(cardsList.get(0).getLpu_shnm()).orElse(null)).getIdump() + "");
         sluch.setWei("0");
 
         //Вызываем метод создания пациента, передавая на вход первый элемент коллекции cardsDiagnList
