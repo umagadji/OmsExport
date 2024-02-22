@@ -49,16 +49,16 @@ public class AppConstants {
     public static final double KOLVO_USL_OPPZ = 1.00;
 
     //Исход заболевания для отделений
-    public static final String SLUCH_ISHOD_30 = "601";
-    public static final String SLUCH_ISHOD_31 = "304";
-    public static final String SLUCH_ISHOD_32 = "304";
-    public static final String SLUCH_ISHOD_YD = "501";
+    public static final String SLUCH_ISHOD_30 = "601"; //Без перемен
+    public static final String SLUCH_ISHOD_31 = "304"; //Без перемен
+    public static final String SLUCH_ISHOD_32 = "304"; //Без перемен
+    public static final String SLUCH_ISHOD_YD = "502"; //Улучшение
 
     //Результат обращения для отделений
-    public static final String SLUCH_RSLT_30 = "604";
-    public static final String SLUCH_RSLT_31 = "308";
-    public static final String SLUCH_RSLT_32 = "308";
-    public static final String SLUCH_RSLT_YD = "501";
+    public static final String SLUCH_RSLT_30 = "604"; //Направлен на консультацию
+    public static final String SLUCH_RSLT_31 = "308"; //Направлен на консультацию
+    public static final String SLUCH_RSLT_32 = "308"; //Направлен на консультацию
+    public static final String SLUCH_RSLT_YD = "501"; //Лечение завершено
 
     //usl_ok для услуг
     public static final String SLUCH_USL_OK_30 = "6";

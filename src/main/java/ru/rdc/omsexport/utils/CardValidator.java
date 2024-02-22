@@ -59,9 +59,12 @@ public class CardValidator {
             card.setSpolis("");
         }
 
-        if (card.getLpu_shnm().trim().equals("~~~") || card.getLpu() == 0) {
-            card.setCorrect(false);
-            card.setComment("Исключается из оплаты: lpu_shnm = ~~~");
+        //Если не стоматология
+        if (!card.getMcod().equals(AppConstants.TFOMS_CODE_KPSTOM)) {
+            if (card.getLpu_shnm().trim().equals("~~~") || card.getLpu() == 0) {
+                card.setCorrect(false);
+                card.setComment("Исключается из оплаты: lpu_shnm = ~~~");
+            }
         }
 
         if (card.getNpolis().trim().equals("")) {

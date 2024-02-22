@@ -300,39 +300,7 @@ public class CreateStomAsumFile {
             //ПРОВЕРКА КАБИНЕТА. КОНЕЦ
 
             //ПРОВЕРКА НАПРАВИВШЕГО ЛПУ. НАЧАЛО
-            if (card.isCorrect()) {
-                //Если поля lpu, lpu_name, lpu_shnm не заполнены
-                if (card.getLpu() <= 0 || card.getLpu_name() == null || card.getLpu_shnm() == null ||
-                        card.getLpu_name().trim().length() == 0 || card.getLpu_shnm().length() == 0) {
-                    card.setCorrect(false);
-                    card.setComment("Некорректное направившее ЛПУ");
-                    setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректное направившее ЛПУ " + card.getLpu_shnm());
-                    setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректное направившее ЛПУ " + card.getLpu_shnm());
-                }
-
-                //Если оно пустое, т.е. если не нашлось в таблице s_lpu записи, значит оно некорректное
-                if (slpuOptional.isEmpty()) { //равносильно null
-                    card.setCorrect(false);
-                    card.setComment("Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                    setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                    setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                            + " Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                } else {
-                    //Если по lpu_shnm в таблице s_lpu не нашлось glpu
-                    if (slpuOptional.get().getGlpu() == null || slpuOptional.get().getGlpu().trim().length() != AppConstants.CODE_LPU_LENGTH) {
-                        card.setCorrect(false);
-                        card.setComment("Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                        setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                        setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
-                                + " Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
-                    }
-                }
-
-            }
+            //ДЛЯ СТОМАТОЛОГИИ НЕ ПРОВЕРЯЕМ ЛПУ. Т.К. ПАЦИЕНТЫ ОБСЛУЖИВАЮТСЯ БЕЗ НАПРАВЛЕНИЙ
             //ПРОВЕРКА НАПРАВИВШЕГО ЛПУ. КОНЕЦ
 
             //ПРОВЕРКА ВРАЧА. НАЧАЛО
@@ -479,9 +447,9 @@ public class CreateStomAsumFile {
         //Сохраняем коллекцию allCardsListStom в БД
         cardsService.saveAllCards(allCardsListStom);
     }
-    record KeyForBoxing(long visitid) {
+    record KeyForBoxing(String snpol, int profil, boolean inogor, int usl_idsp) {
         public KeyForBoxing(Cards cards) {
-            this(cards.getVisitid());
+            this(cards.getSnPol(), cards.getProfil(), cards.isInogor(), cards.getUsl_idsp());
         }
     }
 
