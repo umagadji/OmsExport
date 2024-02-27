@@ -187,7 +187,13 @@ public class CreateAsumElementsDS {
         sluch.setDate_2(row.getDat_out());
         sluch.setDs0(row.getMkb_code_p());
         sluch.setDs1(row.getMkb_code());
-        sluch.setDs2("");
+
+        if (row.getKslp_code().equals("5")) {
+            sluch.setDs2(row.getMkb_code_s());
+        } else {
+            sluch.setDs2("");
+        }
+
         sluch.setCode_mes1("");
         sluch.setCode_mes2("");
         sluch.setRslt(row.getResult_gosp());
