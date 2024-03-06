@@ -127,13 +127,17 @@ public class CreateAsumElements {
         usl.setProfil_k("0");
         usl.setIdsl(UUID.randomUUID().toString().toUpperCase());
 
-        if (cards.isMuvr()) {
+        usl.setMuvr("0");
+        usl.setMuvr_lpu("");
+
+        //Убрал 06.03.2024 т.к. у Артура в ARMs пациенту присваивается первый раз страховая компания, даже если в течение месяца у него несколько СМО (Дагестан и иногородний)
+        /*if (cards.isMuvr()) {
             usl.setMuvr("1");
             usl.setMuvr_lpu(Objects.requireNonNull(slpuService.findSlpuByMcod(cards.getLpu_shnm().trim()).orElse(null)).getGlpu());
         } else {
             usl.setMuvr("0");
             usl.setMuvr_lpu("");
-        }
+        }*/
 
         usl.setDate_usl("");
 

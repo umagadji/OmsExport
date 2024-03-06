@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rdc.omsexport.controllers.MainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.rdc.omsexport.controllers.MainController">
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -161,7 +161,7 @@
                         </HBox>
                         <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
                            <children>
-                              <CheckBox fx:id="chkStac" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ffd014;" text="Стационары">
+                              <CheckBox fx:id="chk7stom" mnemonicParsing="false" selected="true" style="-fx-background-color: #9d00ff14;" text="Стоматология">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -173,12 +173,15 @@
                         </HBox>
                         <HBox style="-fx-border-radius: 5px; -fx-border-color: #00000045;">
                            <children>
-                              <CheckBox fx:id="chk7stom" mnemonicParsing="false" selected="true" style="-fx-background-color: #9d00ff14;" text="Стоматология">
+                              <CheckBox fx:id="chkStac" mnemonicParsing="false" selected="true" style="-fx-background-color: #00ffd014;" text="Стационары">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
                               </CheckBox>
                            </children>
+                           <HBox.margin>
+                              <Insets />
+                           </HBox.margin>
                         </HBox>
                      </children>
                      <VBox.margin>
@@ -304,21 +307,6 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                               </HBox>
-                              <HBox style="-fx-background-color: #00ffd014; -fx-border-radius: 5px; -fx-border-color: #00000045;">
-                                 <children>
-                                    <Label fx:id="counterDs" text="ДС:">
-                                       <HBox.margin>
-                                          <Insets />
-                                       </HBox.margin>
-                                    </Label>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets right="10.0" />
-                                 </HBox.margin>
-                                 <padding>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </padding>
-                              </HBox>
                               <HBox layoutX="113.0" layoutY="10.0" style="-fx-background-color: #9d00ff14; -fx-border-radius: 5px; -fx-border-color: #00000045;">
                                  <children>
                                     <Label fx:id="counterKpStom" text="СТОМ:">
@@ -332,8 +320,23 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </padding>
                                  <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </HBox>
+                              <HBox style="-fx-background-color: #00ffd014; -fx-border-radius: 5px; -fx-border-color: #00000045;">
+                                 <children>
+                                    <Label fx:id="counterDs" text="ДС:">
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                                 <HBox.margin>
                                     <Insets />
                                  </HBox.margin>
+                                 <padding>
+                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                 </padding>
                               </HBox>
                            </children>
                            <opaqueInsets>

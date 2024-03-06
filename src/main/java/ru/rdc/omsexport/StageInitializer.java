@@ -40,7 +40,7 @@ public class StageInitializer implements ApplicationListener<OmsExport.StageRead
             loader.setControllerFactory(aClass -> applicationContext.getBean(aClass));
             Parent parent = loader.load();
             Stage stage = event.getStage();
-            stage.setScene(new Scene(parent, 900, 600));
+            stage.setScene(new Scene(parent, 1000, 650));
             stage.setTitle(applicationTitle + " " + AppInfo.getVersion());
             stage.getIcons().add(new Image(Objects.requireNonNull(this.getClass().getResourceAsStream("/images/icon.png"))));
 
