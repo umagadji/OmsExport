@@ -10,6 +10,7 @@ public class AppInfo {
 
     public AppInfo(@Value("${info.app.version}") String version) {
         this.version = version;
+        System.out.println(version);
     }
 
     public static void getAppInfo() {

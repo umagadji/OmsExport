@@ -214,7 +214,11 @@ public class MainController implements Initializable {
                         createDsAsumFile.createDSAsumFile(createDsAsumFile.getZapListDS());
                     }
 
-                    AlertDialogUtils.showInfoAlert("Информация", null, "ASUM файлы успешно созданы");
+                    AlertDialogUtils.showInfoAlert("Информация", null, "ASUM файлы успешно созданы в " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
+
+                    //Добавлено 08.05.2024. После окончания создания Asum файлов автоматически создается xlsx файл с данными из cards
+                    //Пока отключил
+                    //reportsClass.getAllUslAutomatic(mainStage);
 
                 }).start();
 

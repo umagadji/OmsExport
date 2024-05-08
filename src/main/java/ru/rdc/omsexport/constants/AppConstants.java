@@ -18,6 +18,9 @@ public class AppConstants {
     public static final String reportsFilePath = "Reports\\";
     //Путь к папке с таблицей по плану
     public static final String planFilePath = "Plan\\";
+    //Путь к папке с таблицей по Output - будет содержать xlsx файлы содержащие в себе данные из cards.
+    // Если вдруг понадобится поднять узнать отсечения
+    public static final String outputFilePath = "Output\\";
     //Имя файла для РДЦ
     public static final String ASUM_FILE_NAME_RDC = "ASUM050130";
     //Имя файла для РЭЦ
