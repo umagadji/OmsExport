@@ -55,6 +55,8 @@ public class MainController implements Initializable {
     //Чекбокс для того, чтобы выставить даты услуг, выполненных позднее текущей привести к текущей дате. Добавил 22.10.2023 чтобы не получать новый ФЛК для предварительных файлов. Будет использоваться только для диагностики
     @FXML
     private CheckBox chkPredUslDate; // Значение поля не должно быть больше DSCHET, для сегмента DATE_Z_2 - Дата окончания лечения
+    @FXML
+    private CheckBox chkSaveExports; //Для включения или отключения возможности сохранять данные из cards
 
     private Stage mainStage;
 
@@ -217,8 +219,9 @@ public class MainController implements Initializable {
                     AlertDialogUtils.showInfoAlert("Информация", null, "ASUM файлы успешно созданы в " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 
                     //Добавлено 08.05.2024. После окончания создания Asum файлов автоматически создается xlsx файл с данными из cards
-                    //Пока отключил
-                    //reportsClass.getAllUslAutomatic(mainStage);
+                    if (chkSaveExports.isSelected()) {
+                        reportsClass.getAllUslAutomatic(mainStage);
+                    }
 
                 }).start();
 

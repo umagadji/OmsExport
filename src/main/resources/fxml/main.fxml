@@ -234,13 +234,22 @@
                   </VBox>
                   <VBox>
                      <children>
-                        <TitledPane text="Настройки для предварительных файлов">
+                        <TitledPane text="Настройки для обработки файлов">
                            <content>
                               <AnchorPane>
                                  <children>
                                     <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <CheckBox fx:id="chkPredUslDate" mnemonicParsing="false" text="Изменить даты услуг, выполненных после текущего дня" />
+                                          <VBox HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <CheckBox fx:id="chkPredUslDate" mnemonicParsing="false" text="Изменить даты услуг, выполненных после текущего дня (для предварительных файлов)" />
+                                             </children>
+                                          </VBox>
+                                          <VBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <CheckBox fx:id="chkSaveExports" mnemonicParsing="false" selected="true" text="Сохранить результат выгрузки" />
+                                             </children>
+                                          </VBox>
                                        </children>
                                     </HBox>
                                  </children>
