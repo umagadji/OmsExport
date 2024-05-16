@@ -168,7 +168,7 @@ public class CreateKpAsumFile {
                     card.setCorrect(true);
                 } else {
                     card.setCorrect(false);
-                    card.setComment("Некорректное СМО у иногороднего");
+                    card.setComment("Отсечение: Некорректное СМО у иногороднего");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректное СМО у иногороднего " + card.getSmocod());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -180,7 +180,7 @@ public class CreateKpAsumFile {
                         card.setCorrect(true);
                     } else {
                         card.setCorrect(false);
-                        card.setComment("Некорректное СМО у НЕиногороднего " + card.getSmocod());
+                        card.setComment("Отсечение: Некорректное СМО у НЕиногороднего " + card.getSmocod());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Некорректное СМО у НЕиногороднего " + card.getSmocod());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -194,7 +194,7 @@ public class CreateKpAsumFile {
                 Optional<Smo> smoOptional = smoService.findBySmocod(card.getSmocod().trim());
                 if (smoOptional.isEmpty()) {
                     card.setCorrect(false);
-                    card.setComment("СМО, указанное для пациента, отсутствует в smo.dbf " + card.getSmocod());
+                    card.setComment("Отсечение: СМО, указанное для пациента, отсутствует в smo.dbf " + card.getSmocod());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " СМО, указанное для пациента, отсутствует в smo.dbf " + card.getSmocod());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -209,7 +209,7 @@ public class CreateKpAsumFile {
                 if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
                         !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR)) {
                     card.setCorrect(false);
-                    card.setComment("Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl() + " - ПОЛИКЛИНИКА");
+                    card.setComment("Отсечение: Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl() + " - ПОЛИКЛИНИКА");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " - ПОЛИКЛИНИКА");
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -218,7 +218,7 @@ public class CreateKpAsumFile {
                     //Если раздел прейскуранта правильный, но длина услуги равна 0
                     if (card.getCode_usl().trim().length() == 0) {
                         card.setCorrect(false);
-                        card.setComment("Некорректный код медуслуги ФОМС " + card.getCode_usl());
+                        card.setComment("Отсечение: Некорректный код медуслуги ФОМС " + card.getCode_usl());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Некорректный код медуслуги ФОМС " + card.getCode_usl());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -239,7 +239,7 @@ public class CreateKpAsumFile {
                                 isOPPZOdnoIzPocesh = true;
                                 //Исключается из оплаты, если одно из обращений (пустышка)
                                 card.setCorrect(false);
-                                card.setComment("Не удалось определить ОППЗ-исследование для медуслуги");
+                                card.setComment("Отсечение: Не удалось определить ОППЗ-исследование для медуслуги");
                                 card.setKol_usl(0);
                                 //Здесь можно было бы сделать return. Но для этого нужно реализовать отдельный метод для проверки услуг. Пока оставляем так
                             }
@@ -254,7 +254,7 @@ public class CreateKpAsumFile {
 
                     if (spTarifNewOptional.isEmpty()) {
                         card.setCorrect(false);
-                        card.setComment("Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
+                        card.setComment("Отсечение: Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -263,7 +263,7 @@ public class CreateKpAsumFile {
                         //Если профиль услуги <= 0
                         if (spTarifNewOptional.get().getIdpr() <= 0) {
                             card.setCorrect(false);
-                            card.setComment("Неверный профиль у исследования в sp_tarif: " + card.getCode_usl());
+                            card.setComment("Отсечение: Неверный профиль у исследования в sp_tarif: " + card.getCode_usl());
                             setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                     + " Неверный профиль у исследования в sp_tarif: " + card.getCode_usl());
                             setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -284,7 +284,7 @@ public class CreateKpAsumFile {
                 //Если длина кода МКБ (основного) равна 0
                 if (card.getMkb_code().trim().length() == 0) {
                     card.setCorrect(false);
-                    card.setComment("Некорректный код МКБ mkb_code = " + card.getMkb_code());
+                    card.setComment("Отсечение: Некорректный код МКБ mkb_code = " + card.getMkb_code());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректный код МКБ mkb_code = " + card.getMkb_code());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -294,7 +294,7 @@ public class CreateKpAsumFile {
                     Optional<MkbExtended> mkbExtendedOptionalMkbCode = mkbExtendedService.findByLcod(card.getMkb_code().trim());
                     if (mkbExtendedOptionalMkbCode.isEmpty()) {
                         card.setCorrect(false);
-                        card.setComment("Код МКБ mkb_code не найден в mkb.dbf = " + card.getMkb_code_p());
+                        card.setComment("Отсечение: Код МКБ mkb_code не найден в mkb.dbf = " + card.getMkb_code_p());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Код МКБ mkb_code не найден в mkb.dbf = " + card.getMkb_code_p());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -308,7 +308,7 @@ public class CreateKpAsumFile {
             if (card.isCorrect()) {
                 if (card.getCab_name().trim().length() == 0) {
                     card.setCorrect(false);
-                    card.setComment("Некорректный кабинет cab_name = " + card.getCab_name());
+                    card.setComment("Отсечение: Некорректный кабинет cab_name = " + card.getCab_name());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректный кабинет cab_name = " + card.getCab_name());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -323,7 +323,7 @@ public class CreateKpAsumFile {
                 if (card.getLpu() <= 0 || card.getLpu_name() == null || card.getLpu_shnm() == null ||
                         card.getLpu_name().trim().length() == 0 || card.getLpu_shnm().length() == 0) {
                     card.setCorrect(false);
-                    card.setComment("Некорректное направившее ЛПУ");
+                    card.setComment("Отсечение: Некорректное направившее ЛПУ");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректное направившее ЛПУ " + card.getLpu_name());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -333,7 +333,7 @@ public class CreateKpAsumFile {
                 //Проверяем по направившим ЛПУ КП РДЦ и РЭЦ РДЦ
                 if (card.getLpu() == 108 || card.getLpu() == 219) {
                     card.setCorrect(false);
-                    card.setComment("Направленные от ЛПУ 108, 219 не подаются на оплату");
+                    card.setComment("Отсечение: Направленные от ЛПУ 108, 219 не подаются на оплату");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Направленные от ЛПУ 108, 219 не подаются на оплату " + card.getLpu_name());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -345,7 +345,7 @@ public class CreateKpAsumFile {
                 //Если оно пустое, т.е. если не нашлось в таблице s_lpu записи, значит оно некорректное
                 if (slpuOptional.isEmpty()) { //равносильно null
                     card.setCorrect(false);
-                    card.setComment("Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
+                    card.setComment("Отсечение: Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Некорректное значение lpu_shnm == null для направившего ЛПУ lpu_name = " + card.getLpu_name());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -354,7 +354,7 @@ public class CreateKpAsumFile {
                     //Если по lpu_shnm в таблице s_lpu не нашлось glpu
                     if (slpuOptional.get().getGlpu() == null || slpuOptional.get().getGlpu().trim().length() != AppConstants.CODE_LPU_LENGTH) {
                         card.setCorrect(false);
-                        card.setComment("Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
+                        card.setComment("Отсечение: Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Некорректное значение glpu в s_lpu для направившего ЛПУ lpu_name = " + card.getLpu_name());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -369,7 +369,7 @@ public class CreateKpAsumFile {
             if (card.isCorrect()) {
                 if (Integer.parseInt(card.getCode_md()) <= 0 || card.getVr_fio().trim().length() == 0 || card.getPrvs() <= 0 || card.getVr_spnm().trim().length() == 0) {
                     card.setCorrect(false);
-                    card.setComment("Неопределён врач code_md = " + card.getCode_md());
+                    card.setComment("Отсечение: Неопределён врач code_md = " + card.getCode_md());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Не определён врач code_md = " + card.getCode_md());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -380,7 +380,7 @@ public class CreateKpAsumFile {
                     //Если специальности нет в medspec.dbf или название специальности равна 0
                     if (medspecOptional.isEmpty() || medspecOptional.get().getMspname().trim().length() == 0) {
                         card.setCorrect(false);
-                        card.setComment("Некорректная специальность врача в cards.prvs = " + card.getPrvs());
+                        card.setComment("Отсечение: Некорректная специальность врача в cards.prvs = " + card.getPrvs());
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Некорректная специальность врача в cards.prvs = " + card.getPrvs());
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -394,7 +394,7 @@ public class CreateKpAsumFile {
             //Если не исключается из оплаты и это услуга новорожденного
             if (card.isCorrect() && card.isNovor()) {
                 card.setCorrect(false);
-                card.setComment("Не должно быть новорожденных пациентов в КП " + card.getPrvs());
+                card.setComment("Отсечение: Не должно быть новорожденных пациентов в КП " + card.getPrvs());
                 setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                         + " Не должно быть новорожденных пациентов в КП " + card.getPrvs());
                 setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -418,7 +418,7 @@ public class CreateKpAsumFile {
                     //В коллекции будут элементы если есть повторы кроме самой проверяемой услуги cards
                     if (kpList.size() > 0) {
                         card.setCorrect(false);
-                        card.setComment("У пациента "+ card.getSnPol() +" ОППЗ с таким кодом медуслуги у этого же врача уже есть");
+                        card.setComment("Отсечение: У пациента "+ card.getSnPol() +" ОППЗ с таким кодом медуслуги у этого же врача уже есть");
                         setLogs("ИНФОРМАЦИЯ (КП): " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " У пациента "+ card.getSnPol() +" ОППЗ с таким кодом медуслуги у этого же врача уже есть");
                         setLogsInConsole("ИНФОРМАЦИЯ (КП): " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -449,7 +449,7 @@ public class CreateKpAsumFile {
                     //Если kKpIsslProfPr, т.е. была найдена еще одна такая услуга, то исключаем ее из оплаты
                     if (kKpIsslProfPr > 0) {
                         card.setCorrect(false);
-                        card.setComment("У пациента "+ card.getSnPol() +" исследование с таким кодом в такой день уже есть");
+                        card.setComment("Отсечение: У пациента "+ card.getSnPol() +" исследование с таким кодом в такой день уже есть");
                         setLogs("ИНФОРМАЦИЯ (КП): " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " У пациента исследование с таким кодом в такой день уже есть");
                         setLogsInConsole("ИНФОРМАЦИЯ (КП): " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -479,7 +479,7 @@ public class CreateKpAsumFile {
                     //Если список пустышек пустой, то значит для проверяемой услуги нет соответствующих ОППЗ и проверяемая услуга исключается из оплаты
                     if (kpList.size() == 0) {
                         card.setCorrect(false);
-                        card.setComment("Нет соответствующих ОППЗ исследований");
+                        card.setComment("Отсечение: Нет соответствующих ОППЗ исследований");
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Нет соответствующих ОППЗ исследований");
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -498,7 +498,7 @@ public class CreateKpAsumFile {
                     //Если минимальная дата равна максимально возможной, то такая ситуация невозможна и услуга исключается из оплаты
                     if (minDate == LocalDate.MAX) {
                         card.setCorrect(false);
-                        card.setComment("Некорректное значение minDateIn при определении соответствующих ОППЗ исследований");
+                        card.setComment("Отсечение: Некорректное значение minDateIn при определении соответствующих ОППЗ исследований");
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Некорректное значение minDateIn при определении соответствующих ОППЗ исследований");
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -514,7 +514,7 @@ public class CreateKpAsumFile {
                     //Т.е. такое возможно если не было пустышки и минимальная дата у ОППЗ не изменилась
                     if (!(card.getDate_in().isBefore(card.getDate_out()))) {
                         card.setCorrect(false);
-                        card.setComment("Не соблюдается условие date_in < date_out для ОППЗ");
+                        card.setComment("Отсечение: Не соблюдается условие date_in < date_out для ОППЗ");
                         setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                                 + " Не соблюдается условие date_in < date_out для ОППЗ");
                         setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -531,7 +531,7 @@ public class CreateKpAsumFile {
                 //Если вычисленный тип полиса равен ошибочному
                 if (vpolis == AppConstants.TYPE_POLIS_ERROR) {
                     card.setCorrect(false);
-                    card.setComment("Не удалось определить тип полиса " + card.getVpolis());
+                    card.setComment("Отсечение: Не удалось определить тип полиса " + card.getVpolis());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Не удалось определить тип полиса " + card.getVpolis());
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()

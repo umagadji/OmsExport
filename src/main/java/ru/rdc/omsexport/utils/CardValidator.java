@@ -63,38 +63,38 @@ public class CardValidator {
         if (!card.getMcod().equals(AppConstants.TFOMS_CODE_KPSTOM)) {
             if (card.getLpu_shnm().trim().equals("~~~") || card.getLpu() == 0) {
                 card.setCorrect(false);
-                card.setComment("Исключается из оплаты: lpu_shnm = ~~~");
+                card.setComment("Отсечение: Исключается из оплаты: lpu_shnm = ~~~");
             }
         }
 
         if (card.getNpolis().trim().equals("")) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Номер полиса пустой");
+            card.setComment("Отсечение: Ошибка полиса: Номер полиса пустой");
         }
 
         if (card.getNpolis().trim().length() != 16 && card.getVpolis() == 3) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Неверный ЕНП");
+            card.setComment("Отсечение: Ошибка полиса: Неверный ЕНП");
         }
 
         if (card.getNpolis().trim().length() != 9 && (card.getVpolis() == 1 || card.getVpolis() == 2) && !card.isInogor()) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Врем. свид. или старый полис не равен 9 символам");
+            card.setComment("Отсечение: Ошибка полиса: Врем. свид. или старый полис не равен 9 символам");
         }
 
         if (card.getVpolis() == 4 && card.getNpolis().trim().length() != 16) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Полис родителя неверной длины");
+            card.setComment("Отсечение: Ошибка полиса: Полис родителя неверной длины");
         }
 
         if (card.getVpolis() == 0 && card.getNpolis().trim().length() != 16) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Тип полиса пустой и/или неверная длина полиса");
+            card.setComment("Отсечение: Ошибка полиса: Тип полиса пустой и/или неверная длина полиса");
         }
 
         if (card.getVpolis() == 0) {
             card.setCorrect(false);
-            card.setComment("Ошибка полиса: Тип полиса пустой");
+            card.setComment("Отсечение: Ошибка полиса: Тип полиса пустой");
         }
     }
 
