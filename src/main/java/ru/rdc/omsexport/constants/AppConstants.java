@@ -89,6 +89,7 @@ public class AppConstants {
     public static final String ARIADNA_USL_RAZDEL_PROFPR = "10.2.2"; //Проф. приемы
     public static final String ARIADNA_USL_RAZDEL_SCHOOL = "10.2.3"; //Школа диабета
     public static final String ARIADNA_USL_RAZDEL_STOMATOLOGY = "10.2.4"; //Стоматология
+    public static final String ARIADNA_USL_RAZDEL_TELEMEDICINE = "10.2.5"; //Телемедицинские консультации
 
     //Характер заболевания в МИС
     public static final int ARIADNA_CHAR_ZAB_OSTROE = 1; //Острое
