@@ -89,4 +89,5 @@ public class RowDS {
     private String crit_text;
     private String operac_code;
     private String operac_text;
+    private String docsnils; //СНИЛС врача от 20.03.2025
 }

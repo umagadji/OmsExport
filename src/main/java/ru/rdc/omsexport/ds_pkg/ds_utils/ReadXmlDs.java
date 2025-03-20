@@ -129,6 +129,7 @@ public class ReadXmlDs {
             rowDS.setCrit_text(getTagValue("CRIT_TEXT", element));
             rowDS.setOperac_code(getTagValue("OPERAC_CODE", element));
             rowDS.setOperac_text(getTagValue("OPERAC_TEXT", element));
+            rowDS.setDocsnils(getTagValue("DOCSNILS", element));
         }
 
         return rowDS;

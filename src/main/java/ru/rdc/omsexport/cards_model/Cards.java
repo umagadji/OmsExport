@@ -152,6 +152,8 @@ public class Cards implements Comparable<Cards> {
     private int usl_idsp; //Новое поле способ оплаты от 09.2023
     @Column
     private String mcod; //Для упрощения поиска при выполнении запросов в таблице cards. Больше ни для чего
+    @Column
+    private String docsnils; //Новое поле СНИЛС врача от 20.03.2025
 
     public Cards(int id, String spolis, String npolis, boolean novor, String fam_n, String im_n, String ot_n) {
         this.id = id;

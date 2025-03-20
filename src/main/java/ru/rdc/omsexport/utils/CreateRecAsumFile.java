@@ -931,6 +931,7 @@ public class CreateRecAsumFile {
         vrachi.setKod(cards.getCode_md() + "");
         vrachi.setFio(cards.getVr_fio());
         vrachi.setMcod(AppConstants.TFOMS_CODE_REC);
+        vrachi.setSs(cards.getDocsnils()); //Добавляет СНИЛС врача от 20.03.2025
 
         Optional<Medspec> medspecOptional = medspecService.findByIdmsp(cards.getPrvs() + "");
 

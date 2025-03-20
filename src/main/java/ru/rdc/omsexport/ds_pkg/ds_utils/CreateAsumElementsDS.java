@@ -139,7 +139,7 @@ public class CreateAsumElementsDS {
         vrachiDS.setDost("false");
         vrachiDS.setType("2");
         vrachiDS.setVers_spec("");
-        vrachiDS.setSs("");
+        vrachiDS.setSs(rowDS.getDocsnils());
 
         return vrachiDS;
     }

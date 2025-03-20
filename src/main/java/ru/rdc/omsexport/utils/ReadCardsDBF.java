@@ -268,6 +268,10 @@ public class ReadCardsDBF {
                     card.setVisitid(Long.parseLong(rowList.get(k).get("VISITID")));
                 }
 
+                if (!rowList.get(k).get("DOCSNILS").equals("null")) {
+                    card.setDocsnils(rowList.get(k).get("DOCSNILS"));
+                }
+
                 list.add(card);
             }
 
