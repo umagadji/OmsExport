@@ -160,6 +160,9 @@ public class CreateKpAsumFile {
             CardValidator.validateExcelCard(card);
             //ПРОВЕРКИ ИЗ EXCEL. КОНЕЦ
 
+            //Создаем Optional для дальнейшей проверки услуги. Перенес выше, т.к. spTarifNewOptional будет применяться в разных проверках
+            Optional<SpTarifExtended> spTarifNewOptional = spTarifExtendedService.findByKsg(card.getCode_usl().trim());
+
             //ПРОВЕРКА СМО. НАЧАЛО
             //Если иногородний
             if (card.isInogor()) {
@@ -207,7 +210,9 @@ public class CreateKpAsumFile {
             if (card.isCorrect()) {
                 //Если раздел прейскуранта не относится к ОППЗ, проф. приемам и школе диабета
                 if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
-                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR)) {
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR) &&
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_TELEMEDICINE) &&
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_REPRODCT_ZDOROVIE)) {
                     card.setCorrect(false);
                     card.setComment("Отсечение: Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl() + " - ПОЛИКЛИНИКА");
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -249,8 +254,6 @@ public class CreateKpAsumFile {
 
                 //Если услуга оказалась обращением (не пустышка)
                 if (!isOPPZOdnoIzPocesh) {
-                    //Создаем Optional для дальнейшей проверки услуги
-                    Optional<SpTarifExtended> spTarifNewOptional = spTarifExtendedService.findByKsg(card.getCode_usl().trim());
 
                     if (spTarifNewOptional.isEmpty()) {
                         card.setCorrect(false);
@@ -542,6 +545,27 @@ public class CreateKpAsumFile {
                 }
             }
             //Проверка типа полиса. Конец
+
+            //Добавил 11.04.2025 для разделения Услуг из диспансеризации репродуктивного здоровья
+            //Проверяем если услуга корректная и относится к разделу прейскуранта Консультации по репродуктивной диапансеризации
+            //Оставил телемедицину и здесь
+            if (card.isCorrect() &&
+                    (card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_TELEMEDICINE) ||
+                            card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_REPRODCT_ZDOROVIE))) {
+                //Проверяем есть ли такая услуга в sp_tarif
+                if (spTarifNewOptional.isEmpty()) {
+                    card.setCorrect(false);
+                    card.setComment("Отсечение: Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
+                    setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
+                            + " Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
+                    setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
+                            + " Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
+                } else {
+                    //Иначе, если услуга действительно из разделов "Телемедицина" или "репродуктивной диапансеризации" и она есть в sp_tarif, то устанавливаем ей t_type как в sp_tarif.
+                    //Это необходимо чтобы эта услуга имела свой t_type, чтобы для дальнейшей группировки в KeyForBoxing попадала в отдельную группу
+                    card.setT_type(spTarifNewOptional.get().getT_type());
+                }
+            }
         }
 
         setLogs("Конец проверки корректности поликлинических услуг");

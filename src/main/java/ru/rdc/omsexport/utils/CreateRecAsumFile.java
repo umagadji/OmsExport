@@ -212,7 +212,8 @@ public class CreateRecAsumFile {
                 if (!card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_OPPZ) &&
                         !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_PROFPR) &&
                         !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_SCHOOL) &&
-                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_TELEMEDICINE)) {
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_TELEMEDICINE) &&
+                        !card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_REPRODCT_ZDOROVIE)) {
                     card.setCorrect(false);
                     card.setComment("Отсечение: Некорректный раздел медуслуги в Ариадне " + card.getMetPrKod() + " для услуги " + card.getCode_usl());
                     setLogs("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", услуга " + card.getCode_usl() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
@@ -548,10 +549,11 @@ public class CreateRecAsumFile {
             //Проверка типа полиса. Конец
 
             //Добавил 20.11.2024 для разделения "телемедицинской услуги" и "школы диабета" в отдельные случаи
-            //Проверяем если услуга корректная и относится к разделу прейскуранта "Телемедицина" и "Школа диабета"
+            //Проверяем если услуга корректная и относится к разделу прейскуранта "Телемедицина" и "Школа диабета" и "репродуктивной диапансеризации"
             if (card.isCorrect() &&
                     (card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_TELEMEDICINE) ||
-                            card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_SCHOOL) )) {
+                            card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_SCHOOL) ||
+                            card.getMetPrKod().trim().equals(AppConstants.ARIADNA_USL_RAZDEL_REPRODCT_ZDOROVIE))) {
                 //Проверяем есть ли такая услуга в sp_tarif
                 if (spTarifNewOptional.isEmpty()) {
                     card.setCorrect(false);
@@ -561,7 +563,7 @@ public class CreateRecAsumFile {
                     setLogsInConsole("ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd() + ", N_MKP " + card.getN_mkp()
                             + " Не удалось определить код медуслуги ФОМС code_usl: " + card.getCode_usl());
                 } else {
-                    //Иначе, если услуга действительно из разделов "Телемедицина" или "Школа диабета" и она есть в sp_tarif, то устанавливаем ей t_type как в sp_tarif.
+                    //Иначе, если услуга действительно из разделов "Телемедицина" или "Школа диабета" или "репродуктивной диапансеризации" и она есть в sp_tarif, то устанавливаем ей t_type как в sp_tarif.
                     //Это необходимо чтобы эта услуга имела свой t_type, чтобы для дальнейшей группировки в KeyForBoxing попадала в отдельную группу
                     card.setT_type(spTarifNewOptional.get().getT_type());
                 }
