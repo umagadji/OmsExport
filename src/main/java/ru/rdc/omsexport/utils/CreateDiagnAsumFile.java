@@ -39,6 +39,7 @@ public class CreateDiagnAsumFile {
     private final CardsService cardsService;
     private final SlpuService slpuService;
     private final MedspecService medspecService;
+    private final DispUslService dispUslService;
 
     @Autowired
     public CreateDiagnAsumFile(
@@ -47,13 +48,14 @@ public class CreateDiagnAsumFile {
             MedspecService medspecService,
             SpTarifExtendedService spTarifExtendedService,
             MkbExtendedService mkbExtendedService,
-            CardsService cardsService) {
+            CardsService cardsService, DispUslService dispUslService) {
         this.smoService = smoService;
         this.slpuService = slpuService;
         this.medspecService = medspecService;
         this.spTarifExtendedService = spTarifExtendedService;
         this.mkbExtendedService = mkbExtendedService;
         this.cardsService = cardsService;
+        this.dispUslService = dispUslService;
     }
 
     public void setMainController(MainController mainController) {
@@ -195,6 +197,8 @@ public class CreateDiagnAsumFile {
             Optional<MkbExtended> mkbExtendedOptionalForMkbCode = mkbExtendedService.findByLcod(card.getMkb_code());
             //Получаем из таблицы medspec - специальность по полю prvs из входной таблицы cards
             Optional<Medspec> medspecOptional = medspecService.findByIdmsp(Integer.toString(card.getPrvs()).trim());
+            //Получаем из таблицы disp_usl - услуги по диспансеризациям, для проверки доступности на оплату
+            Optional<DispUsl> dispUslOptional = dispUslService.getDispUslByKsg(card.getCode_usl());
 
             //ПРОВЕРКА СМО. НАЧАЛО
             //Если иногородний
@@ -495,6 +499,20 @@ public class CreateDiagnAsumFile {
                 card.setUsl_idsp(spTarifNewOptional.get().getUsl_idsp());
             }
 
+            //Добавлено 30.04.2025 в связи с диспансеризацией оценки репродуктивного здоровья. Если услуга из диспансеризации, то она подается не в диагностике
+            if (card.isCorrect() && dispUslOptional.isPresent()) {
+                card.setDispcorrect(true); //корректна для диспансеризации для включения в поликлинические услуги
+                card.setCorrect(false); // некорректна для диагностики
+                String uslType = dispUslOptional.get().getUsl_type().trim();
+
+                if (uslType.equals("Оценка РЗ") || uslType.equals("Углубленная по Covid-19")) {
+                    card.setComment("Услуга по диспансеризации " + uslType);
+                    String errorMessage = "ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd()
+                            + ", N_MKP " + card.getN_mkp() + " Услуга по диспансеризации " + uslType;
+                    setLogs(errorMessage);
+                    setLogsInConsole(errorMessage);
+                }
+            }
         }
         setLogs("Конец проверки корректности диагностических услуг.");
         setLogsInConsole("Конец проверки корректности диагностических услуг.");

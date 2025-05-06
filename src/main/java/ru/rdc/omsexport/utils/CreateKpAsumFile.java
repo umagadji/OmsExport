@@ -675,7 +675,15 @@ public class CreateKpAsumFile {
         setLogs("Начало упаковки поликлинических услуг в случаи");
         setLogsInConsole("Начало упаковки поликлинических услуг в случаи");
         //Выбираем из БД только те услуги, для которых в поле correct стоит true. Т.е. разрешенные для оплаты
-        List<Cards> cardsList = cardsService.getCardsKpList().stream().filter(Cards::isCorrect).toList();
+        //List<Cards> cardsList = cardsService.getCardsKpList().stream().filter(Cards::isCorrect).toList();
+
+        List<Cards> cardsList = cardsService.getCardsKpList().stream()
+                .filter(Cards::isCorrect)
+                .collect(Collectors.toCollection(ArrayList::new)); // Создаём изменяемый список
+
+        // Добавляем дополнительные карточки
+        //Здесь выбираем из cardsService.updateAndGetCardsWithDispUsl(), т.к. нам нужно включить диагностические услуги в поликлинику
+        cardsList.addAll(cardsService.updateAndGetCardsWithDispUsl());
 
         //Вызываем метод для упаковки услуг по ключу и записываем их коллекцию map
         Map<KeyForBoxing, List<Cards>> map = groupingUslInSluch(cardsList);

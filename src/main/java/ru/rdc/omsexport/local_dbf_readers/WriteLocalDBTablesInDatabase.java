@@ -24,6 +24,7 @@ public class WriteLocalDBTablesInDatabase {
     private final ProfotService profotService;
     private final UslKratnostMultiService uslKratnostMultiService;
     private final UslIdspService uslIdspService;
+    private final DispUslService dispUslService;
     private final SpTarifExtendedService spTarifExtendedService;
     private final MkbExtendedService mkbExtendedService;
     private final CardsService cardsService;
@@ -41,7 +42,7 @@ public class WriteLocalDBTablesInDatabase {
             ProfotService profotService,
             UslKratnostMultiService uslKratnostMultiService,
             UslIdspService uslIdspService,
-            SpTarifExtendedService spTarifExtendedService,
+            DispUslService dispUslService, SpTarifExtendedService spTarifExtendedService,
             MkbExtendedService mkbExtendedService,
             CardsService cardsService) {
         this.smoService = smoService;
@@ -53,6 +54,7 @@ public class WriteLocalDBTablesInDatabase {
         this.profotService = profotService;
         this.uslKratnostMultiService = uslKratnostMultiService;
         this.uslIdspService = uslIdspService;
+        this.dispUslService = dispUslService;
         this.spTarifExtendedService = spTarifExtendedService;
         this.mkbExtendedService = mkbExtendedService;
         this.cardsService = cardsService;
@@ -91,6 +93,7 @@ public class WriteLocalDBTablesInDatabase {
         spTarifExtendedService.deleteAll();
         uslKratnostMultiService.deleteAll();
         uslIdspService.deleteAll();
+        dispUslService.deleteAll();
         cardsService.deleteAll();
     }
 
@@ -107,6 +110,7 @@ public class WriteLocalDBTablesInDatabase {
         spTarifExtendedService.deleteAll();
         uslKratnostMultiService.deleteAll();
         uslIdspService.deleteAll();
+        dispUslService.deleteAll();
     }
 
     //Метод читает данные из локальных таблиц DBF и сохраняет в БД
@@ -137,6 +141,9 @@ public class WriteLocalDBTablesInDatabase {
 
         List<UslIdsp> uslIdspList = UslIdspDBFReader.readDbf(AppConstants.localDBFPath + "usl_idsp.dbf", "Cp1251");
         uslIdspService.saveAll(uslIdspList);
+
+        List<DispUsl> dispUslList = DispUslDBFReader.readDbf(AppConstants.localDBFPath + "disp_usl.dbf", "Cp1251");
+        dispUslService.saveAll(dispUslList);
 
         List<UslKratnostMulti> uslKratnostMultiList = UslKratnostMultiDBFReader.readDbf(AppConstants.localDBFPath + "usl_kr_multi.dbf", "Cp1251");
         uslKratnostMultiService.saveAll(uslKratnostMultiList);

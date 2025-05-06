@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rdc.omsexport.cards_model.Cards;
 import ru.rdc.omsexport.cards_model.CommentCountsDTO;
+import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.repository.CardsRepository;
 
 import java.util.ArrayList;
@@ -35,6 +36,22 @@ public class CardsService {
     //Получаем диагностические исследования
     public List<Cards> getCardsDiagnList() {
         return repository.findAllByOtdInAndCorrect(new ArrayList<>(Arrays.asList(1,2,3,4,5)), true);
+    }
+
+    //Получаем диагностические исследования для диспансеризации
+    public List<Cards> getCardsDiagnListForDisp() {
+        List<String> targetComments = Arrays.asList(
+                "Услуга по диспансеризации Оценка РЗ",
+                "Услуга по диспансеризации Углубленная по Covid-19"
+        );
+        return repository.findByDispUslCommentsIn(new ArrayList<>(Arrays.asList(1,2,3,4,5)), targetComments);
+    }
+
+    //Обновляем для всех услуг по диспансеризации поле mcod и возвращаем. Нужно чтобы эти услуги попадали в отделение поликлиники
+    public List<Cards> updateAndGetCardsWithDispUsl() {
+        List<Cards> cardsToUpdate = getCardsDiagnListForDisp();
+        cardsToUpdate.forEach(card -> card.setMcod(AppConstants.TFOMS_CODE_KP));
+        return repository.saveAll(cardsToUpdate);
     }
 
     //Получаем эндокринологические исследования

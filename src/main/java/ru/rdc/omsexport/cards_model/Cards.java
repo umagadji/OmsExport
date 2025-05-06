@@ -154,6 +154,9 @@ public class Cards implements Comparable<Cards> {
     private String mcod; //Для упрощения поиска при выполнении запросов в таблице cards. Больше ни для чего
     @Column
     private String docsnils; //Новое поле СНИЛС врача от 20.03.2025
+    @Column
+    //Поле будет хранить значения true - только когда она будет относится к диспансеризациям
+    private boolean dispcorrect = false;
 
     public Cards(int id, String spolis, String npolis, boolean novor, String fam_n, String im_n, String ot_n) {
         this.id = id;
