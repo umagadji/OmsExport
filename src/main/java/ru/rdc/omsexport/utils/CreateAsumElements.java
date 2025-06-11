@@ -141,6 +141,8 @@ public class CreateAsumElements {
 
         usl.setDate_usl("");
 
+        usl.setN_zub(String.valueOf(cards.getN_zub()));
+
         //Создаем сегмент mr_usl_n и устанавливаем ее услуге Usl
         usl.setMrUslN(createMrUslN(usl));
 

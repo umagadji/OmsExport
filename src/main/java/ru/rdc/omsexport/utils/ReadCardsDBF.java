@@ -272,6 +272,10 @@ public class ReadCardsDBF {
                     card.setDocsnils(rowList.get(k).get("DOCSNILS"));
                 }
 
+                if (!rowList.get(k).get("N_ZUB").equals("null")) {
+                    card.setN_zub(Integer.parseInt(rowList.get(k).get("N_ZUB")));
+                }
+
                 list.add(card);
             }
 

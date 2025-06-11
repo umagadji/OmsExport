@@ -157,6 +157,7 @@ public class Cards implements Comparable<Cards> {
     @Column
     //Поле будет хранить значения true - только когда она будет относится к диспансеризациям
     private boolean dispcorrect = false;
+    private int n_zub; //Поле будет хранить номер зуба
 
     public Cards(int id, String spolis, String npolis, boolean novor, String fam_n, String im_n, String ot_n) {
         this.id = id;

@@ -57,6 +57,7 @@ public class Usl {
     private String muvr;
     private String muvr_lpu;
     private String date_usl;
+    private String n_zub;
 
     private MrUslN mrUslN;
 

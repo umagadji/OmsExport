@@ -1,6 +1,8 @@
 package ru.rdc.omsexport.utils;
 
 import ru.rdc.omsexport.asum_models.*;
+import ru.rdc.omsexport.constants.AppConstants;
+
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -269,6 +271,13 @@ public class WriteAsumXmlSegments {
         getElement(writer,"muvr",usl.getMuvr());
         getElement(writer,"muvr_lpu",usl.getMuvr_lpu());
         getElement(writer,"date_usl",usl.getDate_usl());
+
+        //Если услуга относится к стоматологии тогда выгружаем тег с номером зуба
+        if (usl.getMcod().equals(AppConstants.TFOMS_CODE_KPSTOM)) {
+            getElement(writer,"n_zub",usl.getN_zub());
+        } else {
+            getElement(writer,"n_zub","0"); //иначе 0
+        }
 
         if (usl.getMrUslN() != null) {
             writeMrUslN(writer, usl.getMrUslN());
