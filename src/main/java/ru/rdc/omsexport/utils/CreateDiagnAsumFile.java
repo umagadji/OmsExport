@@ -115,35 +115,77 @@ public class CreateDiagnAsumFile {
                 setLogs("Расчет для ОФД выполняется");
                 setLogsInConsole("Расчет для ОФД выполняется");
                 diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_fd.dbf", "866"));
+
+                if (list.contains("6")) {
+                    //Читаем dbf РЭЦ и берем оттуда услугу 56009 (Гониоскопия)
+                    List<Cards> cardsRecList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_rec.dbf", "866")
+                            .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56009")).toList();
+
+                    //Заменяем номер отделения на ОФД
+                    cardsRecList.forEach(cardsDiagn -> cardsDiagn.setOtd(1));
+
+                    //Добавляем в коллекцию с диагностическими услугами
+                    diagnList.addAll(cardsRecList);
+                }
+
             }
 
             //Для эндоскопии необходимо, чтобы также расчет выполнялся по КП, чтобы услуги ларингоскопии из КП добавить в эндоскопию
-            if (list.contains("2") && list.contains("7")) {
+            if (list.contains("2")) {
                 setLogs("Расчет для эндоскопии выполняется");
                 setLogsInConsole("Расчет для эндоскопии выполняется");
                 diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_endosk.dbf", "866"));
 
-                //Читаем dbf поликлиники и берем оттуда услугу 56882 (ларингоскопия)
-                List<Cards> cardsPolList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_kp.dbf", "866")
-                        .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56882")).toList();
+                if (list.contains("7")) {
+                    //Читаем dbf поликлиники и берем оттуда услугу 56882 (ларингоскопия)
+                    List<Cards> cardsPolList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_kp.dbf", "866")
+                            .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56882")).toList();
 
-                //Заменяем номер отделения на эндоскопию
-                cardsPolList.forEach(cardsDiagn -> cardsDiagn.setOtd(2));
+                    //Заменяем номер отделения на эндоскопию
+                    cardsPolList.forEach(cardsDiagn -> cardsDiagn.setOtd(2));
 
-                //Добавляем в коллекцию с диагностическими услугами
-                diagnList.addAll(cardsPolList);
+                    //Добавляем в коллекцию с диагностическими услугами
+                    diagnList.addAll(cardsPolList);
+                }
+
             }
 
             if (list.contains("3")) {
                 setLogs("Расчет для УЗИ выполняется");
                 setLogsInConsole("Расчет для УЗИ выполняется");
                 diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_uzi.dbf", "866"));
+
+                if (list.contains("6")) {
+                    //Читаем dbf РЭЦ и берем оттуда услугу 56904 (Ультразвуковое исследование глазного яблока)
+                    List<Cards> cardsRecList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_rec.dbf", "866")
+                            .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56904")).toList();
+
+                    //Заменяем номер отделения на УЗИ
+                    cardsRecList.forEach(cardsDiagn -> cardsDiagn.setOtd(3));
+
+                    //Добавляем в коллекцию с диагностическими услугами
+                    diagnList.addAll(cardsRecList);
+                }
+
             }
 
             if (list.contains("4")) {
                 setLogs("Расчет для рентген выполняется");
                 setLogsInConsole("Расчет для рентген выполняется");
                 diagnList.addAll(ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_rentgen.dbf", "866"));
+
+                if (list.contains("6")) {
+                    //Читаем dbf РЭЦ и берем оттуда услугу 56955 (Оптическая когерентная томография глаза)
+                    List<Cards> cardsRecList = ReadCardsDBF.readCardsDBF(AppConstants.cardsDBFPath + "cards_rec.dbf", "866")
+                            .stream().filter(cardsDiagn -> cardsDiagn.getCode_usl().equals("56955")).toList();
+
+                    //Заменяем номер отделения на Рентген
+                    cardsRecList.forEach(cardsDiagn -> cardsDiagn.setOtd(4));
+
+                    //Добавляем в коллекцию с диагностическими услугами
+                    diagnList.addAll(cardsRecList);
+                }
+
             }
 
             if (list.contains("5")) {
@@ -507,7 +549,7 @@ public class CreateDiagnAsumFile {
 
                 if (uslType.equals("Оценка РЗ") || uslType.equals("Углубленная по Covid-19")) {
                     card.setComment("Услуга по диспансеризации " + uslType);
-                    String errorMessage = "ОШИБКА ИСХОДНЫХ ДАННЫХ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd()
+                    String errorMessage = "КОММЕНТАРИЙ: " + "SNPol " + card.getSnPol() + ", N_OTD " + card.getOtd()
                             + ", N_MKP " + card.getN_mkp() + " Услуга по диспансеризации " + uslType;
                     setLogs(errorMessage);
                     setLogsInConsole(errorMessage);

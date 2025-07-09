@@ -171,10 +171,11 @@ public class MainController implements Initializable {
 
         if (otdList.size() != 0) {
 
-            if (otdList.contains("2") && !otdList.contains("7")) {
+            //09/07/2025 Убрал условие т.к. внес изменения в класс CreateDiagnAsumFile в связи с аналогичными изменениями для РЭЦ
+            /*if (otdList.contains("2") && !otdList.contains("7")) {
                 String contentText = "Для выполнения расчета по эндоскопии, также необходимо выбрать поликлинику, для учета исследований по ларингоскопии";
                 AlertDialogUtils.showErrorAlert("Ошибка", null,contentText);
-            } else if (otdList.contains("ds") && inputFileDS.equals("")) {
+            } else */if (otdList.contains("ds") && inputFileDS.equals("")) {
                 AlertDialogUtils.showErrorAlert("Ошибка", null, "Не выбран файл по стационару");
             } else if (createDsAsumFile.getKsgList() == null) {
                 //Если нет локальной таблицы КСГ
