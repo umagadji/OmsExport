@@ -6,11 +6,9 @@ import ru.rdc.omsexport.asum_models.*;
 import ru.rdc.omsexport.cards_model.Cards;
 import ru.rdc.omsexport.constants.AppConstants;
 import ru.rdc.omsexport.local_db_models.MkbExtended;
+import ru.rdc.omsexport.local_db_models.PatCategory;
 import ru.rdc.omsexport.local_db_models.Slpu;
-import ru.rdc.omsexport.services.MkbExtendedService;
-import ru.rdc.omsexport.services.SlpuService;
-import ru.rdc.omsexport.services.SmoService;
-import ru.rdc.omsexport.services.SpTarifExtendedService;
+import ru.rdc.omsexport.services.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,6 +22,7 @@ public class CreateAsumElements {
     private static SpTarifExtendedService spTarifExtendedService;
     private static SlpuService slpuService;
     private static MkbExtendedService mkbExtendedService;
+    private static PatcategoryService patcategoryService;
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     @Autowired
@@ -31,11 +30,13 @@ public class CreateAsumElements {
             SmoService smoService,
             SlpuService slpuService,
             SpTarifExtendedService spTarifExtendedService,
-            MkbExtendedService mkbExtendedService) {
+            MkbExtendedService mkbExtendedService,
+            PatcategoryService patcategoryService) {
         CreateAsumElements.smoService = smoService;
         CreateAsumElements.slpuService = slpuService;
         CreateAsumElements.spTarifExtendedService = spTarifExtendedService;
         CreateAsumElements.mkbExtendedService = mkbExtendedService;
+        CreateAsumElements.patcategoryService = patcategoryService;
     }
 
     //Метод создает услугу
@@ -588,6 +589,11 @@ public class CreateAsumElements {
         pacient.setRecid(UUID.randomUUID().toString().toUpperCase());
         pacient.setInv("0");
         pacient.setMse("0");
+
+        //Получаем optional для PatCategory на основании полиса пациента
+        Optional<PatCategory> patCategoryOptional = patcategoryService.findByNpolis(pacient.getNpolis());
+        patCategoryOptional.ifPresent(patCategory -> pacient.setSoc(patCategory.getCategory()));
+
 
         return pacient;
     }

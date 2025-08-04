@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface DispUslRepository extends JpaRepository<DispUsl, Long> {
     Optional<DispUsl> getDispUslByKsg(String code_usl);
-
 }

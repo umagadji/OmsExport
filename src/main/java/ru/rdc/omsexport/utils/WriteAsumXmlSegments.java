@@ -102,6 +102,7 @@ public class WriteAsumXmlSegments {
         getElement(writer, "mse", pacient.getMse());
         getElement(writer, "docdate", pacient.getDocdate());
         getElement(writer, "docorg", pacient.getDocorg());
+        getElement(writer, "soc", pacient.getSoc());
 
         writer.writeEndElement();
     }

@@ -28,6 +28,7 @@ public class WriteLocalDBTablesInDatabase {
     private final SpTarifExtendedService spTarifExtendedService;
     private final MkbExtendedService mkbExtendedService;
     private final CardsService cardsService;
+    private final PatcategoryService patcategoryService;
 
     private MainController mainController;
 
@@ -44,7 +45,7 @@ public class WriteLocalDBTablesInDatabase {
             UslIdspService uslIdspService,
             DispUslService dispUslService, SpTarifExtendedService spTarifExtendedService,
             MkbExtendedService mkbExtendedService,
-            CardsService cardsService) {
+            CardsService cardsService, PatcategoryService patcategoryService) {
         this.smoService = smoService;
         this.slpuService = slpuService;
         this.spTarifService = spTarifService;
@@ -58,6 +59,7 @@ public class WriteLocalDBTablesInDatabase {
         this.spTarifExtendedService = spTarifExtendedService;
         this.mkbExtendedService = mkbExtendedService;
         this.cardsService = cardsService;
+        this.patcategoryService = patcategoryService;
     }
 
     public void setMainController(MainController mainController) {
@@ -95,6 +97,7 @@ public class WriteLocalDBTablesInDatabase {
         uslIdspService.deleteAll();
         dispUslService.deleteAll();
         cardsService.deleteAll();
+        patcategoryService.deleteAll();
     }
 
     //Очищает все локальной БД таблицы. Нужно для повторного запуска программу по кнопке "Запустить" из фронта
@@ -111,6 +114,7 @@ public class WriteLocalDBTablesInDatabase {
         uslKratnostMultiService.deleteAll();
         uslIdspService.deleteAll();
         dispUslService.deleteAll();
+        patcategoryService.deleteAll();
     }
 
     //Метод читает данные из локальных таблиц DBF и сохраняет в БД
@@ -147,6 +151,9 @@ public class WriteLocalDBTablesInDatabase {
 
         List<UslKratnostMulti> uslKratnostMultiList = UslKratnostMultiDBFReader.readDbf(AppConstants.localDBFPath + "usl_kr_multi.dbf", "Cp1251");
         uslKratnostMultiService.saveAll(uslKratnostMultiList);
+
+        List<PatCategory> patCategoryList = PatcategoryDBFReader.readDbf(AppConstants.localDBFPath + "patcategory.dbf", "Cp1251");
+        patcategoryService.saveAll(patCategoryList);
 
         //Сохраняет все объединенные записи в новую таблицу sp_tarif_extended
         spTarifExtendedService.saveSpTarifExtendedList();

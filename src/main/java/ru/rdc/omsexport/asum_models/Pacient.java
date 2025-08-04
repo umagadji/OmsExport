@@ -44,4 +44,5 @@ public class Pacient {
     private String recid;
     private String inv;
     private String mse;
+    private String soc; //Поле будет хранить соц. статус из таблицы patcategory
 }
