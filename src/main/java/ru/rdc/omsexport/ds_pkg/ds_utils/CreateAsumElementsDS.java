@@ -1,15 +1,34 @@
 package ru.rdc.omsexport.ds_pkg.ds_utils;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.rdc.omsexport.ds_pkg.ds_models.*;
+import ru.rdc.omsexport.local_db_models.PatCategory;
+import ru.rdc.omsexport.services.*;
+import ru.rdc.omsexport.utils.CreateAsumElements;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 //Класс для создания элементов ASUM файла по стационару
+@Service
 public class CreateAsumElementsDS {
 
+    private static SlpuService slpuService;
+    private static PatcategoryService patcategoryService;
+
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    @Autowired
+    public CreateAsumElementsDS(
+            SlpuService slpuService,
+            PatcategoryService patcategoryService) {
+        CreateAsumElementsDS.slpuService = slpuService;
+        CreateAsumElementsDS.patcategoryService = patcategoryService;
+    }
 
     public static void createSlKoef(RowDS row, UslDS usl) {
         if (!row.getKslp_code().trim().equals("")) {
@@ -281,8 +300,10 @@ public class CreateAsumElementsDS {
         sluch.setNapr_mo("");
         sluch.setDs_onk("0");
         sluch.setNpr_lpu(row.getNpr_lpu());
-        sluch.setNpr_usl_ok("3");
+        //sluch.setNpr_usl_ok("3"); //Закомментировал 27.08.2025, т.к. могут быть и другие теперь
         sluch.setWei("0.0");
+
+        sluch.setNpr_usl_ok(Objects.requireNonNull(slpuService.findSlpuByMcod(row.getNpr_lpu()).orElse(null)).getIdump() + "");
 
         //Устанавливаем пациента для случая
         PacientDS pacientDS = createPatient(row);
@@ -338,6 +359,10 @@ public class CreateAsumElementsDS {
         pacient.setMse("0");
         pacient.setDocdate(row.getDocdate());
         pacient.setDocorg(row.getDocorg());
+
+        //Получаем optional для PatCategory на основании полиса пациента
+        Optional<PatCategory> patCategoryOptional = patcategoryService.findByNpolis(pacient.getNpolis());
+        patCategoryOptional.ifPresent(patCategory -> pacient.setSoc(patCategory.getCategory()));
 
         return pacient;
     }

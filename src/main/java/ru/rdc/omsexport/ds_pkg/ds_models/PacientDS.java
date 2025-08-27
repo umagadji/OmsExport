@@ -45,4 +45,5 @@ public class PacientDS {
     private String mse;
     private String docdate;
     private String docorg;
+    private String soc; //Поле будет хранить соц. статус из таблицы patcategory
 }

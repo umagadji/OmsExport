@@ -220,8 +220,10 @@ public class MainController implements Initializable {
                     AlertDialogUtils.showInfoAlert("Информация", null, "ASUM файлы успешно созданы в " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss")));
 
                     //Добавлено 08.05.2024. После окончания создания Asum файлов автоматически создается xlsx файл с данными из cards
-                    if (chkSaveExports.isSelected()) {
-                        reportsClass.getAllUslAutomatic(mainStage);
+                    if (otdList.contains("ds") && otdList.stream().anyMatch(s -> !s.equals("ds"))) {
+                        if (chkSaveExports.isSelected()) {
+                            reportsClass.getAllUslAutomatic(mainStage);
+                        }
                     }
 
                 }).start();
